@@ -6,3 +6,11 @@ license.db
 *.exe
 *.dll
 *.pdb
+*.db
+EsnafPos.staticwebassets.endpoints.json
+web.config
+*.dll
+*.pdb
+*.db
+EsnafPos.staticwebassets.endpoints.json
+web.config
