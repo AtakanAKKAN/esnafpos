@@ -83,7 +83,7 @@ namespace EsnafPos.ViewModels
                     };
                     OrderItems.Add(display);
                 }
-                RecalcTotal();
+                await RecalcTotal();
             }
             else
             {
@@ -96,16 +96,23 @@ namespace EsnafPos.ViewModels
                 .OrderBy(c => c.DisplayOrder)
                 .ToListAsync();
 
-            // Kanalları yükle
-            var channelOrder = new List<string> { "Masa", "Bekci", "Kurye", "Trendyol", "Diger" };
-            var channelList = allCats
+            // Kanalları DB'den al — kullanıcı tanımlı sıra korunur
+            var dbChannels = await _db.AppChannels
+                .Where(c => c.IsActive)
+                .OrderBy(c => c.DisplayOrder)
+                .Select(c => c.Name)
+                .ToListAsync();
+
+            // DB'deki kanallardan sadece kategori olan kanalları göster
+            var usedChannels = allCats
                 .Select(c => string.IsNullOrWhiteSpace(c.Channel) ? "Masa" : c.Channel)
                 .Distinct()
-                .OrderBy(c => {
-                    var idx = channelOrder.IndexOf(c);
-                    return idx == -1 ? 99 : idx;
-                })
-                .ToList();
+                .ToHashSet();
+
+            var channelList = dbChannels.Where(c => usedChannels.Contains(c)).ToList();
+            // DB'de olmayan eski kanallar varsa sona ekle
+            foreach (var ch in usedChannels.Where(c => !dbChannels.Contains(c)))
+                channelList.Add(ch);
 
             Channels.Clear();
             foreach (var ch in channelList) Channels.Add(ch);
@@ -285,11 +292,10 @@ namespace EsnafPos.ViewModels
 
             // Kategorileri API'den yükle
             var cats = await client.GetCategoriesAsync();
-            var channelOrder = new List<string> { "Masa", "Bekci", "Kurye", "Trendyol", "Diger" };
+            // API modunda sıralama — kategori sırasını koru
             var channelList = cats
                 .Select(c => string.IsNullOrWhiteSpace(c.Channel) ? "Masa" : c.Channel)
                 .Distinct()
-                .OrderBy(ch => { var idx = channelOrder.IndexOf(ch); return idx == -1 ? 99 : idx; })
                 .ToList();
 
             Channels.Clear();
@@ -444,7 +450,7 @@ namespace EsnafPos.ViewModels
                 OrderItems.Add(displayNew);
             }
 
-            RecalcTotal();
+            await RecalcTotal();
         }
 
         [RelayCommand]
@@ -487,7 +493,7 @@ namespace EsnafPos.ViewModels
             else
                 OrderItems.Remove(item);
 
-            RecalcTotal();
+            await RecalcTotal();
 
             if (!OrderItems.Any() && CurrentOrder != null && CurrentTable != null)
             {
@@ -521,7 +527,7 @@ namespace EsnafPos.ViewModels
             dbItem.Quantity++;
             await _db.SaveChangesAsync();
             if (!ReferenceEquals(item, dbItem)) item.Quantity++;
-            RecalcTotal();
+            await RecalcTotal();
         }
 
         private async Task SaveChangeLog(OrderItem item, int qty, string reason)
@@ -654,7 +660,7 @@ namespace EsnafPos.ViewModels
 
                 if (match != null)
                 {
-                    match.Quantity += srcItem.Quantity - srcItem.CollectedQuantity;
+                    match.Quantity += srcItem.Quantity - srcItem.CollectedQuantity - srcItem.VeresiyeQuantity;
                     _db.OrderItems.Update(match);
                 }
                 else
@@ -666,7 +672,7 @@ namespace EsnafPos.ViewModels
                         NameSnapshot  = srcItem.NameSnapshot,
                         PriceSnapshot = srcItem.PriceSnapshot,
                         Portion       = srcItem.Portion,
-                        Quantity      = srcItem.Quantity - srcItem.CollectedQuantity
+                        Quantity      = srcItem.Quantity - srcItem.CollectedQuantity - srcItem.VeresiyeQuantity
                     };
                     _db.OrderItems.Add(newItem);
                 }
@@ -712,14 +718,14 @@ namespace EsnafPos.ViewModels
             await _printer.PrintCheck(CurrentOrder, OrderItems.ToList());
         }
 
-        private void RecalcTotal()
+        private async Task RecalcTotal()
         {
             TotalAmount = OrderItems.Sum(i => i.LineTotal);
             if (CurrentOrder != null)
             {
                 CurrentOrder.TotalAmount = TotalAmount;
                 _db.Orders.Update(CurrentOrder);
-                _ = _db.SaveChangesAsync(); // UI thread'i bloklamaz
+                await _db.SaveChangesAsync();
             }
         }
     }

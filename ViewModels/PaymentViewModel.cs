@@ -336,7 +336,7 @@ namespace EsnafPos.ViewModels
                 {
                     _order.Status = OrderStatus.Open;
                     _table.Status = TableStatus.Active;
-                    _order.LastItemAddedAt = DateTime.Now;
+                    // LastItemAddedAt güncellenmez — sadece yeni ürün eklenince güncellenmeli
                 }
 
                 _db.Orders.Update(_order);
