@@ -35,6 +35,8 @@ namespace EsnafPos.Views
                     PanelEditTable.Visibility = _vm.EditingTable != null ? Visibility.Visible : Visibility.Collapsed;
                 if (e.PropertyName == nameof(_vm.EditingUser))
                     PanelEditUser.Visibility = _vm.EditingUser != null ? Visibility.Visible : Visibility.Collapsed;
+                if (e.PropertyName == nameof(_vm.EditingChannel))
+                    PanelEditChannel.Visibility = _vm.EditingChannel != null ? Visibility.Visible : Visibility.Collapsed;
                 if (e.PropertyName == nameof(_vm.EditingVeresiye) && _vm.EditingVeresiye == null)
                     PanelEditVeresiye.Visibility = Visibility.Collapsed;
                 if (e.PropertyName == nameof(_vm.IsBusy))
@@ -51,6 +53,7 @@ namespace EsnafPos.Views
                     BtnNavMasalar.IsEnabled      = false;
                     BtnNavUrunler.IsEnabled      = false;
                     BtnNavKullanicilar.IsEnabled = false;
+                    BtnNavKanallar.IsEnabled     = false;
                     BtnNavVeresiye.IsEnabled     = false;
                     SetActiveTab("ag");
                 }
@@ -73,7 +76,7 @@ namespace EsnafPos.Views
             _activeTab = tab;
 
             bool isClient = App.Client != null;
-            var dbTabs = new[] { "masalar", "urunler", "kullanicilar", "veresiye" };
+            var dbTabs = new[] { "masalar", "urunler", "kullanicilar", "kanallar", "veresiye" };
             if (isClient && dbTabs.Contains(tab))
             {
                 ShowToast("Bu sekme sadece Sunucu veya Tek Bilgisayar modunda kullanilabilir.", success: false);
@@ -83,6 +86,7 @@ namespace EsnafPos.Views
             PanelMasalar.Visibility       = Visibility.Collapsed;
             PanelUrunler.Visibility       = Visibility.Collapsed;
             PanelKullanicilar.Visibility  = Visibility.Collapsed;
+            PanelKanallar.Visibility      = Visibility.Collapsed;
             PanelVeresiyeAdmin.Visibility = Visibility.Collapsed;
             PanelIsletme.Visibility       = Visibility.Collapsed;
             PanelAg.Visibility            = Visibility.Collapsed;
@@ -91,6 +95,7 @@ namespace EsnafPos.Views
             SetNavStyle(BtnNavMasalar,      false);
             SetNavStyle(BtnNavUrunler,      false);
             SetNavStyle(BtnNavKullanicilar, false);
+            SetNavStyle(BtnNavKanallar,     false);
             SetNavStyle(BtnNavVeresiye,     false);
             SetNavStyle(BtnNavIsletme,      false);
             SetNavStyle(BtnNavAg,           false);
@@ -109,7 +114,7 @@ namespace EsnafPos.Views
                     SetNavStyle(BtnNavUrunler, true);
                     TxtPageTitle.Text    = "Urunler";
                     TxtPageSubtitle.Text = "Kategori ve urun yonetimi";
-                    // Kanal filtresini uygula
+                    RefreshChannelFilter();
                     ApplyChannelFilter(_activeChannelFilter);
                     break;
                 case "kullanicilar":
@@ -117,6 +122,19 @@ namespace EsnafPos.Views
                     SetNavStyle(BtnNavKullanicilar, true);
                     TxtPageTitle.Text    = "Kullanicilar";
                     TxtPageSubtitle.Text = "Kasiyer ve yonetici hesaplari";
+                    // Rol ComboBox'ı doldur
+                    if (CbNewUserRole.Items.Count == 0)
+                    {
+                        CbNewUserRole.Items.Add("Cashier");
+                        CbNewUserRole.Items.Add("Admin");
+                        CbNewUserRole.SelectedIndex = 0;
+                    }
+                    break;
+                case "kanallar":
+                    PanelKanallar.Visibility = Visibility.Visible;
+                    SetNavStyle(BtnNavKanallar, true);
+                    TxtPageTitle.Text    = "Kanallar";
+                    TxtPageSubtitle.Text = "Siparis kanali ekle, sil, sirala";
                     break;
                 case "veresiye":
                     PanelVeresiyeAdmin.Visibility = Visibility.Visible;
@@ -232,13 +250,49 @@ namespace EsnafPos.Views
         {
             if (sender is not Button btn) return;
             _activeChannelFilter = btn.Tag?.ToString() ?? "";
-            ApplyChannelFilter(_activeChannelFilter);
+            RefreshChannelFilter(); // buton stillerini de günceller
+        }
 
-            // Aktif buton stilini güncelle
-            var filterBtns = new[] { BtnChAll, BtnChMasa, BtnChKurye, BtnChBekci, BtnChTrendyol, BtnChDiger };
-            foreach (var b in filterBtns)
-                b.Style = (Style)FindResource("SecondaryButton");
-            btn.Style = (Style)FindResource("PrimaryButton");
+        // Kanal butonlarını dinamik oluştur — DB'den gelen kanallar
+        private void RefreshChannelFilter()
+        {
+            SpChannelFilter.Children.Clear();
+
+            if (!_vm.Channels.Any())
+            {
+                // Kanal yok → uyarı göster, kategori eklenemez
+                TxtNoChannels.Visibility          = Visibility.Visible;
+                TxtActiveCategoryChannel.Text     = "-";
+                _activeChannelFilter              = "";
+                ApplyChannelFilter("");
+                return;
+            }
+
+            TxtNoChannels.Visibility = Visibility.Collapsed;
+
+            // Aktif kanal geçerli değilse ilk kanala düş
+            if (string.IsNullOrEmpty(_activeChannelFilter) ||
+                !_vm.Channels.Any(c => c.Name == _activeChannelFilter))
+                _activeChannelFilter = _vm.Channels.First().Name;
+
+            foreach (var ch in _vm.Channels)
+            {
+                var isActive = ch.Name == _activeChannelFilter;
+                var btn = new Button
+                {
+                    Tag     = ch.Name,
+                    Height  = 34,
+                    Padding = new Thickness(14, 0, 14, 0),
+                    Margin  = new Thickness(0, 0, 6, 0),
+                    Style   = (Style)FindResource(isActive ? "PrimaryButton" : "SecondaryButton")
+                };
+                btn.Content = new TextBlock { Text = ch.Name, Foreground = System.Windows.Media.Brushes.White, FontSize = 12 };
+                btn.Click  += BtnChannelFilter_Click;
+                SpChannelFilter.Children.Add(btn);
+            }
+
+            TxtActiveCategoryChannel.Text = _activeChannelFilter;
+            ApplyChannelFilter(_activeChannelFilter);
         }
 
         private void ApplyChannelFilter(string channel)
@@ -250,15 +304,18 @@ namespace EsnafPos.Views
                 view.Filter = obj => (obj as Category)?.Channel == channel;
         }
 
-        // Kategori ekle — kanal ComboBox'tan okunur, reset YOK
+        // Kategori ekle — aktif kanal filtresine göre eklenir
         private async void BtnAddCategory_Click(object sender, RoutedEventArgs e)
         {
-            var selectedChannel = (CboNewCategoryChannel.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Masa";
+            if (string.IsNullOrEmpty(_activeChannelFilter))
+            {
+                ShowToast("Oncelikle Kanallar sekmesinden bir kanal ekleyin.", success: false);
+                return;
+            }
             _vm.NewCategoryName    = TxtNewCategoryName.Text;
-            _vm.NewCategoryChannel = selectedChannel;
+            _vm.NewCategoryChannel = _activeChannelFilter;
             await _vm.AddCategoryCommand.ExecuteAsync(null);
             TxtNewCategoryName.Text = "";
-            // Kanal RESET OLMAZ — son seçilen kanal korunur
             ShowToast("Kategori eklendi");
         }
 
@@ -267,7 +324,7 @@ namespace EsnafPos.Views
         {
             if (sender is not Button btn || btn.Tag is not Category c) return;
 
-            var dialog = new EditCategoryDialog(c) { Owner = Window.GetWindow(this) };
+            var dialog = new EditCategoryDialog(c, _vm.Channels.ToList()) { Owner = Window.GetWindow(this) };
             if (dialog.ShowDialog() != true) return;
 
             _vm.StartEditCategoryCommand.Execute(c);
@@ -317,12 +374,13 @@ namespace EsnafPos.Views
             };
             if (dialog.ShowDialog() != true) return;
 
-            _vm.StartAddProductCommand.Execute(c);
-            _vm.EditProductName       = dialog.ProductName;
-            _vm.EditProductPriceTam   = dialog.PriceTam;
-            _vm.EditProductPriceAz    = dialog.PriceAz;
-            _vm.EditProductPriceBucuk = dialog.PriceBucuk;
-            await _vm.SaveEditProductCommand.ExecuteAsync(null);
+            // AddProduct komutu SelectedCategory + NewProduct alanlarını kullanır
+            _vm.SelectedCategory       = c;
+            _vm.NewProductName         = dialog.ProductName;
+            _vm.NewProductPriceTam     = dialog.PriceTam;
+            _vm.NewProductPriceAz      = dialog.PriceAz;
+            _vm.NewProductPriceBucuk   = dialog.PriceBucuk;
+            await _vm.AddProductCommand.ExecuteAsync(null);
             ShowToast("Urun eklendi");
         }
 
@@ -571,6 +629,65 @@ namespace EsnafPos.Views
             TxtConnectionStatus.Foreground = ok
                 ? new SolidColorBrush(Color.FromRgb(39, 174, 96))
                 : new SolidColorBrush(Color.FromRgb(231, 76, 60));
+        }
+
+        // ─── ENTER TUŞU KISAYOLLARI ───────────────────────────────
+
+        private void TxtEnter_AddTable(object sender, System.Windows.Input.KeyEventArgs e)
+        { if (e.Key == System.Windows.Input.Key.Enter) BtnAddTable_Click(sender, e); }
+
+        private void TxtEnter_AddCategory(object sender, System.Windows.Input.KeyEventArgs e)
+        { if (e.Key == System.Windows.Input.Key.Enter) BtnAddCategory_Click(sender, e); }
+
+        private void TxtEnter_AddUser(object sender, System.Windows.Input.KeyEventArgs e)
+        { if (e.Key == System.Windows.Input.Key.Enter) BtnAddUser_Click(sender, e); }
+
+        private void TxtEnter_AddChannel(object sender, System.Windows.Input.KeyEventArgs e)
+        { if (e.Key == System.Windows.Input.Key.Enter) BtnAddChannel_Click(sender, e); }
+
+        private void TxtEnter_SaveChannel(object sender, System.Windows.Input.KeyEventArgs e)
+        { if (e.Key == System.Windows.Input.Key.Enter) BtnSaveEditChannel_Click(sender, e); }
+
+        // ─── KANAL YÖNETİMİ ──────────────────────────────────────
+
+        private async void BtnAddChannel_Click(object sender, RoutedEventArgs e)
+        {
+            await _vm.AddChannelCommand.ExecuteAsync(null);
+            ShowToast("Kanal eklendi");
+        }
+
+        private void BtnStartEditChannel_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is AppChannel ch)
+                _vm.StartEditChannelCommand.Execute(ch);
+        }
+
+        private async void BtnSaveEditChannel_Click(object sender, RoutedEventArgs e)
+        {
+            await _vm.SaveEditChannelCommand.ExecuteAsync(null);
+            ShowToast("Kanal guncellendi");
+        }
+
+        private async void BtnDeleteChannel_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn || btn.Tag is not AppChannel ch) return;
+            var r = MessageBox.Show($"'{ch.Name}' kanalı silinecek. Bu kanaldaki kategoriler etkilenmez.",
+                "Sil", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (r != MessageBoxResult.Yes) return;
+            await _vm.DeleteChannelCommand.ExecuteAsync(ch);
+            ShowToast("Kanal silindi");
+        }
+
+        private async void BtnMoveChannelUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is AppChannel ch)
+                await _vm.MoveChannelUpCommand.ExecuteAsync(ch);
+        }
+
+        private async void BtnMoveChannelDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is AppChannel ch)
+                await _vm.MoveChannelDownCommand.ExecuteAsync(ch);
         }
 
         // ─── YAZICI ───────────────────────────────────────────────

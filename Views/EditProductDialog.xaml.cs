@@ -17,7 +17,7 @@ namespace EsnafPos.Views
             RunProductName.Text = product.Name;
             TxtName.Text        = product.Name;
             TxtAz.Text          = product.PriceAz.HasValue    ? product.PriceAz.Value.ToString("N2")    : "";
-            TxtTam.Text         = product.PriceTam.ToString("N2");
+            TxtTam.Text         = product.PriceTam > 0 ? product.PriceTam.ToString("N2") : "";
             TxtBucuk.Text       = product.PriceBucuk.HasValue ? product.PriceBucuk.Value.ToString("N2") : "";
 
             Loaded += (s, e) => TxtName.Focus();
@@ -25,17 +25,32 @@ namespace EsnafPos.Views
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            ProductName = TxtName.Text.Trim();
-            PriceAz     = TxtAz.Text.Trim();
-            PriceTam    = TxtTam.Text.Trim();
-            PriceBucuk  = TxtBucuk.Text.Trim();
-            Saved       = true;
+            // TAM fiyat zorunlu
+            if (string.IsNullOrWhiteSpace(TxtTam.Text))
+            {
+                TxtTam.BorderBrush = System.Windows.Media.Brushes.Red;
+                TxtTam.BorderThickness = new Thickness(2);
+                TxtTam.Focus();
+                return;
+            }
+
+            ProductName  = TxtName.Text.Trim();
+            PriceAz      = TxtAz.Text.Trim();
+            PriceTam     = TxtTam.Text.Trim();
+            PriceBucuk   = TxtBucuk.Text.Trim();
+            Saved        = true;
             DialogResult = true;
         }
 
         private void TxtPrice_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             if (TxtAz == null || TxtTam == null || TxtBucuk == null) return;
+            // TAM alanı doldurulunca kırmızı border'ı temizle
+            if (sender == TxtTam && !string.IsNullOrWhiteSpace(TxtTam.Text))
+            {
+                TxtTam.ClearValue(System.Windows.Controls.TextBox.BorderBrushProperty);
+                TxtTam.ClearValue(System.Windows.Controls.TextBox.BorderThicknessProperty);
+            }
             var azOk  = decimal.TryParse(TxtAz.Text.Replace(',', '.'),
                 System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out var az);

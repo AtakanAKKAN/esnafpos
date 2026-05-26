@@ -186,13 +186,15 @@ namespace EsnafPos
                     Log("Veritabanı başlatılıyor...");
                     using var scope = Services.CreateScope();
                     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    DatabaseInitializer.Initialize(db);
+                    // Ensure metodları önce — yeni tablolar seed'den önce oluşmalı
                     db.EnsureCustomerNameColumn();
+                    db.EnsureChannelsTable();
                     db.EnsureCategoryChannelColumn();
                     db.EnsureCollectedQuantityColumn();
                     db.EnsureOrderChangeLogTable();
                     db.EnsureLastItemAddedAtColumn();
                     db.EnsureVeresiyeQuantityColumn();
+                    DatabaseInitializer.Initialize(db); // ← en sona
                     Log("Veritabanı hazır.");
                 }
 

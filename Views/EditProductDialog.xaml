@@ -27,10 +27,10 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Urun Adi" FontSize="12" FontWeight="SemiBold"
                            Foreground="{StaticResource MutedBrush}"/>
-                <TextBlock Grid.Column="2" Text="Az" FontSize="14" FontWeight="SemiBold"
-                           Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center"/>
-                <TextBlock Grid.Column="4" Text="Tam *" FontSize="14" FontWeight="Bold"
+                <TextBlock Grid.Column="2" Text="Tam *" FontSize="14" FontWeight="Bold"
                            Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="Az" FontSize="14" FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center"/>
                 <TextBlock Grid.Column="6" Text="1.5" FontSize="14" FontWeight="SemiBold"
                            Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center"/>
             </Grid>
@@ -45,9 +45,9 @@
                     <ColumnDefinition Width="16"/>
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" x:Name="TxtName" Height="58" FontSize="17" KeyDown="Txt_KeyDown"/>
-                <TextBox Grid.Column="2" x:Name="TxtAz" Height="58" FontSize="17" KeyDown="Txt_KeyDown" TextChanged="TxtPrice_Changed"/>
-                <TextBox Grid.Column="4" x:Name="TxtTam" Height="58" FontSize="17" KeyDown="Txt_KeyDown" TextChanged="TxtPrice_Changed"/>
+                <TextBox Grid.Column="0" x:Name="TxtName"   Height="58" FontSize="17" KeyDown="Txt_KeyDown"/>
+                <TextBox Grid.Column="2" x:Name="TxtTam"   Height="58" FontSize="17" KeyDown="Txt_KeyDown" TextChanged="TxtPrice_Changed"/>
+                <TextBox Grid.Column="4" x:Name="TxtAz"    Height="58" FontSize="17" KeyDown="Txt_KeyDown" TextChanged="TxtPrice_Changed"/>
                 <TextBox Grid.Column="6" x:Name="TxtBucuk" Height="58" FontSize="17" KeyDown="Txt_KeyDown"/>
             </Grid>
 

@@ -224,14 +224,40 @@ namespace EsnafPos.ViewModels
         private async Task LoadProductSales(string startDate, string endDate,
                                             ObservableCollection<ProductSaleItem> target)
         {
+            // Sadece gerçek ödeme kaydı olan siparişler alınır.
+            // Veresiye payment'ı silinmiş siparişler dahil edilmez.
+            var paidOrderIds = await _db.Payments
+                .Where(p => p.PaymentType == PaymentType.Cash
+                         || p.PaymentType == PaymentType.CardDebit
+                         || p.PaymentType == PaymentType.CardCredit)
+                .Select(p => p.OrderId)
+                .Distinct()
+                .ToListAsync();
+
+            // Hâlâ aktif veresiye payment'ı olan siparişler de dahil
+            var activeVeresiyeOrderIds = await _db.Payments
+                .Where(p => p.PaymentType == PaymentType.Veresiye)
+                .Select(p => p.OrderId)
+                .Distinct()
+                .ToListAsync();
+
+            var validOrderIds = paidOrderIds
+                .Union(activeVeresiyeOrderIds)
+                .ToHashSet();
+
             var rawItems = await _db.OrderItems
                 .Include(oi => oi.Order)
                 .Where(oi => string.Compare(oi.Order!.DayDate, startDate) >= 0
                           && string.Compare(oi.Order!.DayDate, endDate) <= 0
-                          && (oi.Order.Status == OrderStatus.Paid || oi.Order.Status == OrderStatus.Open
-                                  || oi.Order.Status == OrderStatus.Veresiye)
-                          ) // Tum items (eski kayitlar CollectedQuantity = 0 olabilir)
+                          && (oi.Order.Status == OrderStatus.Paid
+                           || oi.Order.Status == OrderStatus.Open
+                           || oi.Order.Status == OrderStatus.Veresiye))
                 .ToListAsync();
+
+            // Sadece gerçek ödeme kaydı olan siparişlerin item'larını al
+            rawItems = rawItems
+                .Where(oi => validOrderIds.Contains(oi.OrderId))
+                .ToList();
 
             var grouped = rawItems
                 .GroupBy(oi => new { oi.ProductId, oi.NameSnapshot, oi.Portion })
@@ -239,8 +265,6 @@ namespace EsnafPos.ViewModels
                 {
                     ProductName   = g.Key.NameSnapshot,
                     Portion       = g.Key.Portion,
-                    // Yeni sistem: CollectedQuantity veya VeresiyeQuantity kullan
-                    // Eski sistem: CollectedQuantity = 0 ise Quantity kullan (eski odemeler)
                     TotalQuantity = g.Sum(x =>
                         (x.CollectedQuantity + x.VeresiyeQuantity) > 0
                             ? x.CollectedQuantity + x.VeresiyeQuantity
@@ -250,6 +274,7 @@ namespace EsnafPos.ViewModels
                             ? x.PriceSnapshot * (x.CollectedQuantity + x.VeresiyeQuantity)
                             : x.PriceSnapshot * x.Quantity)
                 })
+                .Where(x => x.TotalQuantity > 0)
                 .OrderBy(x => x.ProductName)
                 .ThenBy(x => x.Portion)
                 .ToList();

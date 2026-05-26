@@ -28,6 +28,12 @@ namespace EsnafPos.ViewModels
         [ObservableProperty] private string _editCategoryChannel = "Masa";
         [ObservableProperty] private string _categoryErrorMessage = "";
 
+        // KANAL
+        [ObservableProperty] private ObservableCollectionEx<AppChannel> _channels = new();
+        [ObservableProperty] private string _newChannelName = "";
+        [ObservableProperty] private AppChannel? _editingChannel;
+        [ObservableProperty] private string _editChannelName = "";
+
         // URUN - Yeni ekle
         [ObservableProperty] private ObservableCollectionEx<Product> _products = new();
         [ObservableProperty] private string _newProductName = "";
@@ -81,11 +87,17 @@ namespace EsnafPos.ViewModels
                 Categories.Clear();
                 foreach (var c in cats) Categories.Add(c);
 
+                var channels = await _db.AppChannels
+                    .Where(c => c.IsActive).OrderBy(c => c.DisplayOrder).ToListAsync();
+                Channels.Clear();
+                foreach (var ch in channels) Channels.Add(ch);
+
                 Products.Clear();
                 SelectedCategory = null;
                 EditingTable = null;
                 EditingProduct = null;
                 EditingCategory = null;
+                EditingChannel = null;
 
                 await LoadUsers();
             }
@@ -363,8 +375,9 @@ namespace EsnafPos.ViewModels
 
             // ViewModel listesi
             Products.Add(product);
-            // *** DÜZELTME: Expander icin Category.Products de guncelle ***
-            SelectedCategory.Products.Add(product);
+            // EF Core change tracking bazen otomatik ekliyor — duplicate önlemi
+            if (!SelectedCategory.Products.Any(p => p.Id == product.Id))
+                SelectedCategory.Products.Add(product);
 
             NewProductName = "";
             NewProductPriceAz = "";
@@ -669,26 +682,97 @@ namespace EsnafPos.ViewModels
             var payment = await _db.Payments.FindAsync(entry.PaymentId);
             if (payment == null) return;
 
-            var items = await _db.OrderItems
-                .Where(i => i.OrderId == entry.OrderId && i.VeresiyeQuantity > 0)
-                .ToListAsync();
-            foreach (var item in items)
-            {
-                item.VeresiyeQuantity = 0;
-                _db.OrderItems.Update(item);
-            }
-
-            var order = await _db.Orders.FindAsync(entry.OrderId);
-            if (order != null && order.Status == OrderStatus.Veresiye)
-            {
-                order.Status = OrderStatus.Open;
-                var table = await _db.Tables.FindAsync(order.TableId);
-                if (table != null) { table.Status = TableStatus.Active; _db.Tables.Update(table); }
-            }
-
+            // Sadece payment kaydını sil — sipariş ve masa durumuna dokunma
             _db.Payments.Remove(payment);
             await _db.SaveChangesAsync();
             await LoadVeresiye();
+        }
+
+        // ─── KANAL YÖNETİMİ ───────────────────────────────────────
+
+        [RelayCommand]
+        private async Task AddChannel()
+        {
+            if (string.IsNullOrWhiteSpace(NewChannelName)) return;
+            if (Channels.Any(c => c.Name.Equals(NewChannelName.Trim(), StringComparison.OrdinalIgnoreCase))) return;
+            var channel = new AppChannel
+            {
+                Name         = NewChannelName.Trim(),
+                DisplayOrder = Channels.Count + 1,
+                IsActive     = true
+            };
+            _db.AppChannels.Add(channel);
+            await _db.SaveChangesAsync();
+            Channels.Add(channel);
+            NewChannelName = "";
+        }
+
+        [RelayCommand]
+        private void StartEditChannel(AppChannel? channel)
+        {
+            if (channel == null) return;
+            EditingChannel = channel;
+            EditChannelName = channel.Name;
+        }
+
+        [RelayCommand]
+        private async Task SaveEditChannel()
+        {
+            if (EditingChannel == null || string.IsNullOrWhiteSpace(EditChannelName)) return;
+            EditingChannel.Name = EditChannelName.Trim();
+            _db.AppChannels.Update(EditingChannel);
+            await _db.SaveChangesAsync();
+            EditingChannel = null;
+            EditChannelName = "";
+        }
+
+        [RelayCommand]
+        private void CancelEditChannel()
+        {
+            EditingChannel = null;
+            EditChannelName = "";
+        }
+
+        [RelayCommand]
+        private async Task DeleteChannel(AppChannel? channel)
+        {
+            if (channel == null) return;
+            channel.IsActive = false;
+            _db.AppChannels.Update(channel);
+            await _db.SaveChangesAsync();
+            Channels.Remove(channel);
+        }
+
+        [RelayCommand]
+        private async Task MoveChannelUp(AppChannel? channel)
+        {
+            if (channel == null) return;
+            var list = Channels.ToList();
+            int idx = list.IndexOf(channel);
+            if (idx <= 0) return;
+            var prev = list[idx - 1];
+            (channel.DisplayOrder, prev.DisplayOrder) = (prev.DisplayOrder, channel.DisplayOrder);
+            _db.AppChannels.Update(channel);
+            _db.AppChannels.Update(prev);
+            await _db.SaveChangesAsync();
+            Channels.Remove(channel);
+            Channels.Insert(idx - 1, channel);
+        }
+
+        [RelayCommand]
+        private async Task MoveChannelDown(AppChannel? channel)
+        {
+            if (channel == null) return;
+            var list = Channels.ToList();
+            int idx = list.IndexOf(channel);
+            if (idx < 0 || idx >= list.Count - 1) return;
+            var next = list[idx + 1];
+            (channel.DisplayOrder, next.DisplayOrder) = (next.DisplayOrder, channel.DisplayOrder);
+            _db.AppChannels.Update(channel);
+            _db.AppChannels.Update(next);
+            await _db.SaveChangesAsync();
+            Channels.Remove(channel);
+            Channels.Insert(idx + 1, channel);
         }
 
         [RelayCommand]

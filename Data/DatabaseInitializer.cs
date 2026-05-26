@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using EsnafPos.Models;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace EsnafPos.Data
 {
@@ -13,57 +8,43 @@ namespace EsnafPos.Data
     {
         public static void Initialize(AppDbContext context)
         {
-            // Veritabani yoksa olustur
             context.Database.EnsureCreated();
 
-            // Hic kullanici yoksa admin ekle
+            // Kullanıcı yoksa admin + kasiyer ekle
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
-                    new User
-                    {
-                        Username = "admin",
-                        PinHash = HashPin("1234"),
-                        Role = UserRole.Admin,
-                        IsActive = true
-                    },
-                    new User
-                    {
-                        Username = "kasiyer",
-                        PinHash = HashPin("5678"),
-                        Role = UserRole.Cashier,
-                        IsActive = true
-                    }
+                    new User { Username = "admin",   PinHash = HashPin("1234"), Role = UserRole.Admin,   IsActive = true },
+                    new User { Username = "kasiyer", PinHash = HashPin("5678"), Role = UserRole.Cashier, IsActive = true }
                 );
                 context.SaveChanges();
             }
 
-            // Hic masa yoksa varsayilan masalari ekle
+            // Masa yoksa varsayılan masalar
             if (!context.Tables.Any())
             {
                 for (int i = 1; i <= 10; i++)
-                {
-                    context.Tables.Add(new Table
-                    {
-                        Name = $"Masa {i}",
-                        Status = TableStatus.Empty,
-                        IsActive = true,
-                        DisplayOrder = i
-                    });
-                }
+                    context.Tables.Add(new Table { Name = $"Masa {i}", Status = TableStatus.Empty, IsActive = true, DisplayOrder = i });
                 context.SaveChanges();
             }
 
-            // Hic kategori yoksa ornek ekle
+            // Kategori yoksa örnekler
             if (!context.Categories.Any())
             {
-                var categories = new List<Category>
-                {
-                    new Category { Name = "Yemekler", IsActive = true, DisplayOrder = 1 },
+                context.Categories.AddRange(
+                    new Category { Name = "Yemekler",  IsActive = true, DisplayOrder = 1 },
                     new Category { Name = "Icecekler", IsActive = true, DisplayOrder = 2 },
-                    new Category { Name = "Tatlilar", IsActive = true, DisplayOrder = 3 }
-                };
-                context.Categories.AddRange(categories);
+                    new Category { Name = "Tatlilar",  IsActive = true, DisplayOrder = 3 }
+                );
+                context.SaveChanges();
+            }
+
+            // Kanal yoksa varsayılan kanallar
+            if (!context.AppChannels.Any())
+            {
+                var defaults = new[] { "Masa", "Kurye", "Bekci", "Trendyol", "Diger" };
+                for (int i = 0; i < defaults.Length; i++)
+                    context.AppChannels.Add(new AppChannel { Name = defaults[i], DisplayOrder = i + 1, IsActive = true });
                 context.SaveChanges();
             }
         }
