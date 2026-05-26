@@ -1,0 +1,318 @@
+<Window x:Class="EsnafPos.Views.PaymentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Odeme Al" Height="700" Width="1260"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#1E2A3A">
+
+    <Window.Resources>
+        <Style x:Key="PosBtn" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.65"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="380"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="240"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══ SOL: URUN LiSTESi ═══ -->
+        <Grid Grid.Column="0" Background="#263445">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="#1E2A3A" Padding="20,16">
+                <TextBlock Text="{Binding TableName, FallbackValue='Masa'}"
+                           FontSize="22" FontWeight="Bold" Foreground="White"/>
+            </Border>
+
+
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,4,0,0">
+                <ItemsControl x:Name="IcItems">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="#2E4060" BorderThickness="0,0,0,1" Padding="12,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock FontSize="15" FontWeight="SemiBold" Foreground="White"
+                                                   Text="{Binding DisplayName, Mode=OneWay}" TextWrapping="Wrap"/>
+                                        <TextBlock FontSize="12" Foreground="#7F8C8D" Margin="0,3,0,0">
+                                            <Run Text="{Binding UnitPrice, StringFormat='{}{0:N2} TL', Mode=OneWay}"/>
+                                            <Run Text=" x "/>
+                                            <Run Text="{Binding RemainingQuantity, Mode=OneWay}"/>
+                                            <Run Text=" kalan"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border Background="#1E2A3A" CornerRadius="8" Padding="8,4"
+                                                VerticalAlignment="Center" Margin="0,0,8,0">
+                                            <TextBlock FontSize="13" FontWeight="Bold" Foreground="#27AE60"
+                                                       Text="{Binding RowTotal, StringFormat='{}{0:N2} TL', Mode=OneWay}"/>
+                                        </Border>
+                                        <Button Width="38" Height="38" Background="#E74C3C"
+                                                Style="{StaticResource PosBtn}"
+                                                Tag="{Binding}" Click="BtnDecrease_Click">
+                                            <TextBlock Text="−" Foreground="White" FontSize="22" FontWeight="Bold"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        </Button>
+                                        <Border Width="44" Height="38" Background="#1E2A3A"
+                                                CornerRadius="6" Margin="5,0">
+                                            <TextBlock Text="{Binding SelectedQuantity, Mode=OneWay}"
+                                                       FontSize="16" FontWeight="Bold" Foreground="White"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <Button Width="38" Height="38" Background="#27AE60"
+                                                Style="{StaticResource PosBtn}"
+                                                Tag="{Binding}" Click="BtnIncrease_Click">
+                                            <TextBlock Text="+" Foreground="White" FontSize="22" FontWeight="Bold"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <Border Grid.Row="3" Background="#1E2A3A" Padding="16,12">
+                <Grid>
+                    <TextBlock Text="TOPLAM:" Foreground="#7F8C8D" FontSize="13"
+                               FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N2} TL'}"
+                               Foreground="White" FontSize="18" FontWeight="Bold"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <Button Grid.Row="4" Margin="12,6,12,12" Height="44"
+                    Background="#C0392B" Style="{StaticResource PosBtn}"
+                    Click="BtnCancel_Click">
+                <TextBlock Text="KAPAT" Foreground="White" FontWeight="Bold" FontSize="15"/>
+            </Button>
+        </Grid>
+
+        <!-- ═══ ORTA: SECiLEN TOPLAM ═══ -->
+        <Grid Grid.Column="1" Background="#263445" Margin="2,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Toplam / Kalan -->
+            <Grid Grid.Row="0" Margin="16,16,16,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Background="{StaticResource PrimaryBrush}"
+                        CornerRadius="12" Padding="16,14">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="Toplam" Foreground="White" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N2} TL'}"
+                                   Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Background="#E67E22" CornerRadius="12" Padding="16,14">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="Kalan" Foreground="White" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding RemainingAmount, StringFormat='{}{0:N2} TL'}"
+                                   Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Secilen Toplam -->
+            <Border Grid.Row="1" Background="{StaticResource AccentBrush}"
+                    CornerRadius="12" Margin="16,0,16,12" Padding="20,16">
+                <Grid>
+                    <TextBlock Text="Secilen Toplam:" Foreground="White"
+                               FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding SelectedItemsTotal, StringFormat='{}{0:N2} TL'}"
+                               Foreground="White" FontSize="22" FontWeight="Bold"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Tumu butonu -->
+            <Button Grid.Row="2" Margin="16,0,16,12" Height="54"
+                    Background="#2980B9" Style="{StaticResource PosBtn}"
+                    Click="BtnSelectAll_Click">
+                <TextBlock Text="Tumu Sec" Foreground="White" FontWeight="Bold" FontSize="18"/>
+            </Button>
+
+            <!-- Hata -->
+            <Border x:Name="BorderError" Grid.Row="3" Background="#C0392B"
+                    CornerRadius="8" Margin="16,0,16,0" Padding="12,8" Visibility="Collapsed">
+                <TextBlock x:Name="TxtError" Foreground="White" FontSize="13" TextWrapping="Wrap"/>
+            </Border>
+        </Grid>
+
+        <!-- ═══ SAG: ODEME YONTEMLERI ═══ -->
+        <Grid Grid.Column="2" Background="#1E2A3A">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0" Margin="12,16,12,8" Height="74"
+                    Background="#27AE60" Style="{StaticResource PosBtn}"
+                    Click="BtnPayCash_Click">
+                <TextBlock Text="Nakit" Foreground="White" FontWeight="Bold" FontSize="20"/>
+            </Button>
+            <Button Grid.Row="1" Margin="12,0,12,8" Height="74"
+                    Background="#1A5276" Style="{StaticResource PosBtn}"
+                    Click="BtnPayDebit_Click">
+                <TextBlock Text="Banka Karti" Foreground="White" FontWeight="Bold" FontSize="18"/>
+            </Button>
+            <Button Grid.Row="2" Margin="12,0,12,8" Height="74"
+                    Background="#E67E22" Style="{StaticResource PosBtn}"
+                    Click="BtnPayCredit_Click">
+                <TextBlock Text="Kredi Karti" Foreground="White" FontWeight="Bold" FontSize="18"/>
+            </Button>
+            <Button Grid.Row="3" Margin="12,0,12,8" Height="74"
+                    Background="#8E44AD" Style="{StaticResource PosBtn}"
+                    Click="BtnPayVeresiye_Click">
+                <TextBlock Text="Veresiye" Foreground="White" FontWeight="Bold" FontSize="20"/>
+            </Button>
+
+            <!-- Veresiye isim -->
+            <StackPanel Grid.Row="4" x:Name="PanelVeresiyeName"
+                        Visibility="Collapsed" Margin="12,0,12,8">
+                <TextBlock Text="Musteri Adi:" Foreground="#7F8C8D"
+                           FontSize="12" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBox x:Name="TxtVeresiyeName" Height="42" FontSize="14"
+                         Background="White" Foreground="#1E2A3A"
+                         Padding="8,6" BorderThickness="0"
+                         KeyDown="TxtVeresiyeName_KeyDown"/>
+                <Button Margin="0,6,0,0" Height="42"
+                        Background="#8E44AD" Style="{StaticResource PosBtn}"
+                        Click="BtnConfirmVeresiye_Click">
+                    <TextBlock Text="✓  Veresiye Ekle" Foreground="White"
+                               FontWeight="Bold" FontSize="14"/>
+                </Button>
+            </StackPanel>
+
+            <!-- Yapilan odemeler -->
+            <Border Grid.Row="5" Margin="12,0,12,8" Background="#263445"
+                    CornerRadius="10" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Onceki Odemeler" Foreground="White"
+                               FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <ScrollViewer MaxHeight="220" VerticalScrollBarVisibility="Hidden">
+                        <ItemsControl ItemsSource="{Binding ExistingPayments}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#1E2A3A" CornerRadius="8"
+                                            Padding="10,8" Margin="0,0,0,5">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Foreground="#BDC3C7"
+                                                       FontSize="13" FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding PaymentTypeDisplay}"/>
+                                            <TextBlock Grid.Column="1" Foreground="#27AE60"
+                                                       FontSize="14" FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding Amount, StringFormat='{}{0:N2} TL'}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <Separator Background="#2E4060" Margin="0,10,0,10"/>
+                    <TextBlock Text="Bu Seferki Odemeler" Foreground="White"
+                               FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                        <ItemsControl x:Name="IcPayments">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <TextBlock Text="{Binding PaymentTypeDisplay}"
+                                                   Foreground="White" FontSize="12" FontWeight="SemiBold"
+                                                   Width="90" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding CustomerName}"
+                                                   Foreground="#8E44AD" FontSize="11"
+                                                   VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{Binding Amount, StringFormat='{}{0:N2} TL'}"
+                                                   Foreground="#27AE60" FontSize="13" FontWeight="Bold"
+                                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <Button Width="26" Height="26"
+                                                Background="#C0392B" Style="{StaticResource PosBtn}"
+                                                Tag="{Binding}" Click="BtnRemovePayment_Click"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="X" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <TextBlock x:Name="TxtNoPayments" Text="Henuz odeme yok."
+                               Foreground="#7F8C8D" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Kaydet ve Kapat -->
+            <Button x:Name="BtnSaveAndClose" Grid.Row="6"
+                    Margin="12,0,12,8" Height="48"
+                    Background="#2980B9" Style="{StaticResource PosBtn}"
+                    Visibility="Collapsed" Click="BtnSaveAndClose_Click">
+                <TextBlock Text="Kaydet ve Kapat" Foreground="White" FontWeight="Bold" FontSize="14"/>
+            </Button>
+
+            <!-- Tamamla -->
+            <Button x:Name="BtnComplete" Grid.Row="7"
+                    Margin="12,0,12,12" Height="54"
+                    Background="#27AE60" Style="{StaticResource PosBtn}"
+                    Visibility="Collapsed" Click="BtnComplete_Click">
+                <TextBlock Text="✓  TAMAMLA" Foreground="White" FontWeight="Bold" FontSize="17"/>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>

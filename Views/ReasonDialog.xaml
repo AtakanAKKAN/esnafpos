@@ -1,0 +1,41 @@
+<Window x:Class="EsnafPos.Views.ReasonDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sebep Bildir" Height="380" Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F0F4F8">
+
+    <StackPanel VerticalAlignment="Center" Margin="40">
+
+        <TextBlock Text="Eksiltme Sebebi" FontSize="24" FontWeight="Bold"
+                   Foreground="{StaticResource PrimaryBrush}"
+                   HorizontalAlignment="Center" Margin="0,0,0,12"/>
+
+        <TextBlock x:Name="TxtProductInfo" FontSize="16"
+                   Foreground="{StaticResource MutedBrush}"
+                   HorizontalAlignment="Center" Margin="0,0,0,32"
+                   TextWrapping="Wrap" TextAlignment="Center"/>
+
+        <Button Style="{StaticResource WarningButton}"
+                Height="64" FontSize="18" Margin="0,0,0,14"
+                Click="BtnDegisim_Click">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🔄" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                <TextBlock Text="Urun Degisimi" Foreground="White"
+                           FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+        <Button Style="{StaticResource DangerButton}"
+                Height="64" FontSize="18"
+                Click="BtnIptal_Click">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="❌" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                <TextBlock Text="Urun Iptali" Foreground="White"
+                           FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+    </StackPanel>
+</Window>

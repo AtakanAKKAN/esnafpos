@@ -1,0 +1,635 @@
+<Page x:Class="EsnafPos.Views.AdminPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#F0F4F8">
+
+    <Page.Resources>
+        <Storyboard x:Key="ToastShow">
+            <DoubleAnimation Storyboard.TargetName="ToastBorder"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.2"/>
+        </Storyboard>
+        <Storyboard x:Key="ToastHide">
+            <DoubleAnimation Storyboard.TargetName="ToastBorder"
+                             Storyboard.TargetProperty="Opacity"
+                             From="1" To="0" Duration="0:0:0.3"/>
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SOL SIDEBAR -->
+        <Border Grid.Column="0" Background="#2C3E50">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#243342" Padding="20,18">
+                    <TextBlock Text="Yonetim Paneli" FontSize="15" FontWeight="Bold"
+                               Foreground="White" TextWrapping="Wrap"/>
+                </Border>
+                <StackPanel Grid.Row="1" Margin="0,8,0,0">
+                    <Button x:Name="BtnNavMasalar"     Click="BtnNav_Click" Tag="masalar"     Style="{StaticResource NavBtn}"><TextBlock Text="Masalar"          Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavUrunler"     Click="BtnNav_Click" Tag="urunler"     Style="{StaticResource NavBtn}"><TextBlock Text="Urunler"          Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavKullanicilar" Click="BtnNav_Click" Tag="kullanicilar" Style="{StaticResource NavBtn}"><TextBlock Text="Kullanicilar"    Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavVeresiye"    Click="BtnNav_Click" Tag="veresiye"    Style="{StaticResource NavBtn}"><TextBlock Text="Veresiye"         Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavIsletme"     Click="BtnNav_Click" Tag="isletme"     Style="{StaticResource NavBtn}"><TextBlock Text="Isletme Ayarlari" Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavAg"          Click="BtnNav_Click" Tag="ag"          Style="{StaticResource NavBtn}"><TextBlock Text="Ag Ayarlari"      Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavYazici"      Click="BtnNav_Click" Tag="yazici"      Style="{StaticResource NavBtn}"><TextBlock Text="Yazici"           Style="{StaticResource NavBtnText}"/></Button>
+                </StackPanel>
+                <TextBlock Grid.Row="2" Text="v2.0" FontSize="11" Foreground="#4A6480"
+                           HorizontalAlignment="Center" Margin="0,0,0,14"/>
+            </Grid>
+        </Border>
+
+        <!-- İÇERİK ALANI -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Sayfa başlığı -->
+            <Border Grid.Row="0" Background="White" Padding="28,18"
+                    BorderBrush="#E8ECF0" BorderThickness="0,0,0,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock x:Name="TxtPageTitle" FontSize="22" FontWeight="Bold" Foreground="#2C3E50"/>
+                        <TextBlock x:Name="TxtPageSubtitle" FontSize="13" Foreground="#95A5A6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Border Grid.Column="1" x:Name="LoadingIndicator" Visibility="Collapsed" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#27AE60" Margin="3,0">
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="Border.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                 From="1" To="0.2" Duration="0:0:0.6" AutoReverse="True"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Border.Triggers>
+                            </Border>
+                            <TextBlock Text="Yukleniyor..." FontSize="13" Foreground="#95A5A6" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <Grid Margin="28">
+
+                    <!-- MASALAR -->
+                    <StackPanel x:Name="PanelMasalar" Visibility="Collapsed">
+                        <Border Background="White" CornerRadius="12" Padding="24" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="Yeni Masa Ekle" FontSize="15" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,14"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="TxtNewTableName" Width="260" Height="44" FontSize="14" Margin="0,0,12,0"/>
+                                    <Button Style="{StaticResource PrimaryButton}" Height="44" Padding="24,0" Click="BtnAddTable_Click">
+                                        <TextBlock Text="Ekle" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                </StackPanel>
+                                <Border x:Name="PanelEditTable" Background="#EBF5FB" CornerRadius="10" Padding="16,12"
+                                        Margin="0,16,0,0" Visibility="Collapsed">
+                                    <StackPanel>
+                                        <TextBlock Text="Masa Adini Duzenle" FontSize="13" FontWeight="SemiBold"
+                                                   Foreground="#2C3E50" Margin="0,0,0,10"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox x:Name="TxtEditTableName" Width="240" Height="40" FontSize="14"
+                                                     Margin="0,0,10,0"
+                                                     Text="{Binding EditTableName, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Button Style="{StaticResource PrimaryButton}" Height="40" Padding="18,0" Margin="0,0,8,0"
+                                                    Click="BtnSaveEditTable_Click">
+                                                <TextBlock Text="Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                            </Button>
+                                            <Button Style="{StaticResource SecondaryButton}" Height="40" Padding="14,0"
+                                                    Command="{Binding CancelEditTableCommand}">
+                                                <TextBlock Text="Iptal" Foreground="White"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="White" CornerRadius="12" Padding="8">
+                            <ItemsControl ItemsSource="{Binding Tables}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="4,4" Padding="16,14" CornerRadius="8" Background="#FAFBFC">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                                    <TextBlock Text="{Binding Status}" FontSize="12" Foreground="#95A5A6" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <Button Width="36" Height="36" Margin="0,0,5,0" Background="#95A5A6" BorderThickness="0"
+                                                            Tag="{Binding}" Click="BtnMoveTableUp_Click" Style="{StaticResource IconBtn}">
+                                                        <TextBlock Text="▲" Foreground="White" FontSize="12" FontWeight="Bold"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Button>
+                                                    <Button Width="36" Height="36" Margin="0,0,10,0" Background="#95A5A6" BorderThickness="0"
+                                                            Tag="{Binding}" Click="BtnMoveTableDown_Click" Style="{StaticResource IconBtn}">
+                                                        <TextBlock Text="▼" Foreground="White" FontSize="12" FontWeight="Bold"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Button>
+                                                    <Button Height="36" Padding="16,0" Margin="0,0,8,0"
+                                                            Style="{StaticResource SecondaryButton}"
+                                                            Tag="{Binding}" Click="BtnStartEditTable_Click">
+                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="13"/>
+                                                    </Button>
+                                                    <Button Height="36" Padding="14,0"
+                                                            Style="{StaticResource DangerButton}"
+                                                            Tag="{Binding}" Click="BtnDeleteTable_Click">
+                                                        <TextBlock Text="Sil" Foreground="White" FontSize="13"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- ÜRÜNLER -->
+                    <StackPanel x:Name="PanelUrunler" Visibility="Collapsed">
+
+                        <!-- Kanal filtre tabs -->
+                        <Border Background="White" CornerRadius="12" Padding="16,12" Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Kanal:" FontSize="13" FontWeight="SemiBold"
+                                           Foreground="#2C3E50" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Button x:Name="BtnChAll"      Tag=""          Click="BtnChannelFilter_Click" Height="34" Padding="14,0" Margin="0,0,6,0" Style="{StaticResource PrimaryButton}">  <TextBlock Text="Tümü"     Foreground="White" FontSize="12"/></Button>
+                                <Button x:Name="BtnChMasa"     Tag="Masa"      Click="BtnChannelFilter_Click" Height="34" Padding="14,0" Margin="0,0,6,0" Style="{StaticResource SecondaryButton}"><TextBlock Text="Masa"     Foreground="White" FontSize="12"/></Button>
+                                <Button x:Name="BtnChKurye"    Tag="Kurye"     Click="BtnChannelFilter_Click" Height="34" Padding="14,0" Margin="0,0,6,0" Style="{StaticResource SecondaryButton}"><TextBlock Text="Kurye"    Foreground="White" FontSize="12"/></Button>
+                                <Button x:Name="BtnChBekci"    Tag="Bekci"     Click="BtnChannelFilter_Click" Height="34" Padding="14,0" Margin="0,0,6,0" Style="{StaticResource SecondaryButton}"><TextBlock Text="Bekci"    Foreground="White" FontSize="12"/></Button>
+                                <Button x:Name="BtnChTrendyol" Tag="Trendyol"  Click="BtnChannelFilter_Click" Height="34" Padding="14,0" Margin="0,0,6,0" Style="{StaticResource SecondaryButton}"><TextBlock Text="Trendyol" Foreground="White" FontSize="12"/></Button>
+                                <Button x:Name="BtnChDiger"    Tag="Diger"     Click="BtnChannelFilter_Click" Height="34" Padding="14,0" Margin="0"       Style="{StaticResource SecondaryButton}"><TextBlock Text="Diğer"    Foreground="White" FontSize="12"/></Button>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Yeni kategori ekle -->
+                        <Border Background="White" CornerRadius="12" Padding="20,16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="Yeni Kategori Ekle" FontSize="15" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,14"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="TxtNewCategoryName" Width="220" Height="42"
+                                             FontSize="14" Margin="0,0,10,0"/>
+                                    <ComboBox x:Name="CboNewCategoryChannel" Width="150" Height="42"
+                                              FontSize="14" Margin="0,0,10,0" SelectedIndex="0">
+                                        <ComboBoxItem Content="Masa"     Tag="Masa"/>
+                                        <ComboBoxItem Content="Kurye"    Tag="Kurye"/>
+                                        <ComboBoxItem Content="Bekci"    Tag="Bekci"/>
+                                        <ComboBoxItem Content="Trendyol" Tag="Trendyol"/>
+                                        <ComboBoxItem Content="Diğer"    Tag="Diger"/>
+                                    </ComboBox>
+                                    <Button Style="{StaticResource PrimaryButton}" Height="42" Padding="20,0"
+                                            Click="BtnAddCategory_Click">
+                                        <TextBlock Text="Kategori Ekle" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Kategori listesi -->
+                        <Border Background="White" CornerRadius="12" Padding="8">
+                            <ItemsControl x:Name="IcCategories" ItemsSource="{Binding Categories}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Expander Margin="4,4">
+                                            <Expander.Header>
+                                                <Grid Width="900">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                                        <TextBlock Text="{Binding Channel}" FontSize="12" Foreground="#95A5A6" Margin="0,2,0,0"/>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                        <Button Width="34" Height="34" Margin="0,0,5,0" Background="#95A5A6" BorderThickness="0"
+                                                                Tag="{Binding}" Click="BtnMoveCategoryUp_Click" Style="{StaticResource IconBtn}">
+                                                            <TextBlock Text="▲" Foreground="White" FontSize="11" FontWeight="Bold"
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Button>
+                                                        <Button Width="34" Height="34" Margin="0,0,8,0" Background="#95A5A6" BorderThickness="0"
+                                                                Tag="{Binding}" Click="BtnMoveCategoryDown_Click" Style="{StaticResource IconBtn}">
+                                                            <TextBlock Text="▼" Foreground="White" FontSize="11" FontWeight="Bold"
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Button>
+                                                        <Button Height="34" Padding="14,0" Margin="0,0,8,0"
+                                                                Style="{StaticResource SecondaryButton}"
+                                                                Tag="{Binding}" Click="BtnStartEditCategory_Click">
+                                                            <TextBlock Text="Duzenle" Foreground="White" FontSize="12"/>
+                                                        </Button>
+                                                        <Button Height="34" Padding="14,0" Margin="0,0,8,0"
+                                                                Style="{StaticResource PrimaryButton}"
+                                                                Tag="{Binding}" Click="BtnAddProduct_Click">
+                                                            <TextBlock Text="+ Urun Ekle" Foreground="White" FontSize="12"/>
+                                                        </Button>
+                                                        <Button Height="34" Padding="12,0"
+                                                                Style="{StaticResource DangerButton}"
+                                                                Tag="{Binding}" Click="BtnDeleteCategory_Click">
+                                                            <TextBlock Text="Sil" Foreground="White" FontSize="12"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Expander.Header>
+                                            <ItemsControl ItemsSource="{Binding Products}" Margin="20,8,0,8">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="0,3" Padding="14,10" CornerRadius="8" Background="#F8F9FA">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="14"
+                                                                           FontWeight="SemiBold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="1"
+                                                                           Text="{Binding PriceTam, StringFormat='{}{0:N2} TL'}"
+                                                                           FontSize="14" FontWeight="Bold" Foreground="#27AE60"
+                                                                           VerticalAlignment="Center" Margin="0,0,16,0"/>
+                                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                    <Button Height="32" Padding="12,0" Margin="0,0,6,0"
+                                                                            Style="{StaticResource SecondaryButton}"
+                                                                            Tag="{Binding}" Click="BtnStartEditProduct_Click">
+                                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="12"/>
+                                                                    </Button>
+                                                                    <Button Height="32" Padding="10,0"
+                                                                            Style="{StaticResource DangerButton}"
+                                                                            Tag="{Binding}" Click="BtnDeleteProduct_Click">
+                                                                        <TextBlock Text="Sil" Foreground="White" FontSize="12"/>
+                                                                    </Button>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Expander>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+
+                    </StackPanel>
+
+                    <!-- KULLANICILAR -->
+                    <StackPanel x:Name="PanelKullanicilar" Visibility="Collapsed">
+                        <Border x:Name="PanelEditUser" Background="#EBF5FB" CornerRadius="12" Padding="20,16"
+                                Margin="0,0,0,16" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="Kullanici Duzenle" FontSize="15" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,12"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Width="200" Height="42" FontSize="14" Margin="0,0,12,0"
+                                             Text="{Binding EditUsername, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <PasswordBox x:Name="PbEditPin" Width="140" Height="42" FontSize="14" Margin="0,0,12,0"/>
+                                    <Button Style="{StaticResource PrimaryButton}" Height="42" Padding="18,0" Margin="0,0,8,0"
+                                            Click="BtnSaveEditUser_Click">
+                                        <TextBlock Text="Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                    <Button Style="{StaticResource SecondaryButton}" Height="42" Padding="14,0"
+                                            Command="{Binding CancelEditUserCommand}">
+                                        <TextBlock Text="Iptal" Foreground="White"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="White" CornerRadius="12" Padding="8" Margin="0,0,0,16">
+                            <ItemsControl ItemsSource="{Binding Users}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="4,4" Padding="16,14" CornerRadius="8" Background="#FAFBFC">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Username}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                                    <TextBlock Text="{Binding Role}" FontSize="12" Foreground="#95A5A6" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <Button Height="36" Padding="14,0" Margin="0,0,8,0"
+                                                            Style="{StaticResource SecondaryButton}"
+                                                            Tag="{Binding}" Click="BtnStartEditUser_Click">
+                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="13"/>
+                                                    </Button>
+                                                    <Button Height="36" Padding="12,0"
+                                                            Style="{StaticResource DangerButton}"
+                                                            Tag="{Binding}" Click="BtnDeleteUser_Click">
+                                                        <TextBlock Text="Sil" Foreground="White" FontSize="13"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+                        <Border Background="White" CornerRadius="12" Padding="20,16">
+                            <StackPanel>
+                                <TextBlock Text="Yeni Kullanici Ekle" FontSize="15" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,14"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <TextBox x:Name="TxtNewUserName" Width="200" Height="42" FontSize="14" Margin="0,0,12,0"/>
+                                    <PasswordBox x:Name="PbNewPin" Width="140" Height="42" FontSize="14" Margin="0,0,12,0"/>
+                                    <ComboBox x:Name="CbNewUserRole" Width="140" Height="42" FontSize="14"/>
+                                </StackPanel>
+                                <Button Style="{StaticResource PrimaryButton}" Height="44" Padding="24,0"
+                                        HorizontalAlignment="Left" Click="BtnAddUser_Click">
+                                    <TextBlock Text="Kullanici Ekle" Foreground="White" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- VERESİYE -->
+                    <StackPanel x:Name="PanelVeresiyeAdmin" Visibility="Collapsed">
+                        <Border x:Name="PanelEditVeresiye" Background="#EBF5FB" CornerRadius="12" Padding="20,16"
+                                Margin="0,0,0,12" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="Musteri Adini Duzenle" FontSize="15" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,12"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Width="260" Height="42" FontSize="14" Margin="0,0,12,0"
+                                             Text="{Binding EditVeresiyeName, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Style="{StaticResource PrimaryButton}" Height="42" Padding="20,0" Margin="0,0,8,0"
+                                            Click="BtnSaveVeresiyeName_Click">
+                                        <TextBlock Text="Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                    <Button Style="{StaticResource SecondaryButton}" Height="42" Padding="16,0"
+                                            Command="{Binding CancelEditVeresiyeCommand}">
+                                        <TextBlock Text="Iptal" Foreground="White"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="White" CornerRadius="12" Padding="8">
+                            <ItemsControl ItemsSource="{Binding VeresiyeEntries}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="4,4" Padding="16,14" CornerRadius="8" Background="#FAFBFC">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" Width="38" Height="38" CornerRadius="19"
+                                                        Background="#8E44AD" Margin="0,0,14,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding CustomerName[0]}" FontSize="16" FontWeight="Bold"
+                                                               Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding CustomerName}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                        <TextBlock Text="{Binding TableName}" FontSize="12" Foreground="#95A5A6" Margin="0,0,10,0"/>
+                                                        <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"
+                                                                   FontSize="12" Foreground="#95A5A6"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="2" VerticalAlignment="Center"
+                                                           Text="{Binding Amount, StringFormat='{}{0:N2} TL'}"
+                                                           FontSize="16" FontWeight="Bold" Foreground="#8E44AD" Margin="0,0,16,0"/>
+                                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Button Height="36" Padding="14,0" Margin="0,0,8,0"
+                                                            Style="{StaticResource SecondaryButton}"
+                                                            Tag="{Binding}" Click="BtnEditVeresiye_Click">
+                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="13"/>
+                                                    </Button>
+                                                    <Button Height="36" Padding="14,0"
+                                                            Style="{StaticResource DangerButton}"
+                                                            Tag="{Binding}" Click="BtnDeleteVeresiye_Click">
+                                                        <TextBlock Text="Iptal Et" Foreground="White" FontSize="13"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- İŞLETME AYARLARI -->
+                    <StackPanel x:Name="PanelIsletme" Visibility="Collapsed">
+                        <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="580"
+                                HorizontalAlignment="Left" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="Uygulama ve Isletme Bilgileri" FontSize="16" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,20"/>
+                                <TextBlock Text="Uygulama Adi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBox x:Name="TxtAppName" Height="44" FontSize="15" Margin="0,0,0,16"/>
+                                <TextBlock Text="Isletme Adi (fiste cikacak)" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBox x:Name="TxtBusinessName" Height="44" FontSize="15" Margin="0,0,0,16"/>
+                                <TextBlock Text="Adres" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBox x:Name="TxtBusinessAddress" Height="44" FontSize="15" Margin="0,0,0,16"/>
+                                <TextBlock Text="Telefon" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBox x:Name="TxtBusinessPhone" Height="44" FontSize="15" Margin="0,0,0,16"/>
+                                <TextBlock Text="Fis Alt Notu (tesekkuler, bekleyiniz vb.)" FontSize="14"
+                                           FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBox x:Name="TxtReceiptNote" Height="44" FontSize="15" Margin="0,0,0,24"/>
+                                <Button Style="{StaticResource PrimaryButton}" Height="48" FontSize="15"
+                                        Padding="28,0" HorizontalAlignment="Left" Click="BtnSaveBusinessSettings_Click">
+                                    <TextBlock Text="Ayarlari Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="580"
+                                HorizontalAlignment="Left" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="Lisans Bilgisi" FontSize="16" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,16"/>
+                                <Border x:Name="PanelLicenseInfo" CornerRadius="8" Padding="16">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="TxtLicenseIcon" FontSize="20" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                        <StackPanel>
+                                            <TextBlock x:Name="TxtLicenseStatus" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                                            <TextBlock x:Name="TxtLicenseExpiry" FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,0"/>
+                                            <TextBlock x:Name="TxtLicensePackage" FontSize="13" Foreground="#7F8C8D" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="580" HorizontalAlignment="Left">
+                            <StackPanel>
+                                <TextBlock Text="Uygulama Ikonu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,8"/>
+                                <TextBlock Text="Pencere ikonu degistirilir. (Gorev cubugu ikonu sabittir)"
+                                           FontSize="12" Foreground="#95A5A6" Margin="0,0,0,16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border x:Name="BorderIconPreview" Width="64" Height="64" CornerRadius="12"
+                                            Background="#F0F4F8" Margin="0,0,16,0">
+                                        <Image x:Name="ImgIconPreview" Stretch="Uniform" Margin="8"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <Button Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0"
+                                                HorizontalAlignment="Left" Click="BtnSelectIcon_Click">
+                                            <TextBlock Text="Ikon Sec..." Foreground="White"/>
+                                        </Button>
+                                        <TextBlock x:Name="TxtIconPath" FontSize="11" Foreground="#95A5A6"
+                                                   Margin="0,6,0,0" TextTrimming="CharacterEllipsis" MaxWidth="200"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- AĞ AYARLARI -->
+                    <StackPanel x:Name="PanelAg" Visibility="Collapsed">
+                        <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="520" HorizontalAlignment="Left">
+                            <StackPanel>
+                                <TextBlock Text="Ag Modu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+                                    <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="RbStandalone" GroupName="AppMode" IsChecked="True"
+                                                         Checked="AppMode_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Tek Bilgisayar" FontSize="14" FontWeight="SemiBold"
+                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="RbServer" GroupName="AppMode"
+                                                         Checked="AppMode_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Sunucu" FontSize="14" FontWeight="SemiBold"
+                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border CornerRadius="10" Padding="16,12" Background="#F8F9FA">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="RbClient" GroupName="AppMode"
+                                                         Checked="AppMode_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Istemci" FontSize="14" FontWeight="SemiBold"
+                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Sunucu Port" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBox x:Name="TxtServerPort" Height="44" FontSize="15" Width="160"
+                                         HorizontalAlignment="Left" Text="5150" Margin="0,0,0,16"/>
+                                <StackPanel x:Name="PanelClientSettings" Visibility="Collapsed">
+                                    <TextBlock Text="Sunucu IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBox x:Name="TxtServerIp" Height="44" FontSize="15" Width="240"
+                                             HorizontalAlignment="Left" Margin="0,0,0,16"/>
+                                </StackPanel>
+                                <TextBlock Text="API Kullanici Adi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBox x:Name="TxtApiUsername" Height="44" FontSize="15" Width="240"
+                                         HorizontalAlignment="Left" Margin="0,0,0,16"/>
+                                <TextBlock Text="API Sifresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <PasswordBox x:Name="TxtApiPassword" Height="44" FontSize="15" Width="240"
+                                             HorizontalAlignment="Left" Margin="0,0,0,16"/>
+                                <StackPanel x:Name="PanelTestConnection" Orientation="Horizontal"
+                                            Margin="0,0,0,20" Visibility="Collapsed">
+                                    <Button Style="{StaticResource SecondaryButton}" Height="44" Padding="20,0" Margin="0,0,12,0"
+                                            Click="BtnTestConnection_Click">
+                                        <TextBlock Text="Baglanti Test Et" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                    <TextBlock x:Name="TxtConnectionStatus" FontSize="14" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <Button Style="{StaticResource PrimaryButton}" Height="48" FontSize="15"
+                                        Padding="28,0" HorizontalAlignment="Left" Click="BtnSaveNetwork_Click">
+                                    <TextBlock Text="Ayarlari Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- YAZICI -->
+                    <StackPanel x:Name="PanelYazici" Visibility="Collapsed">
+                        <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="520" HorizontalAlignment="Left">
+                            <StackPanel>
+                                <TextBlock Text="Yazici Baglantisi" FontSize="16" FontWeight="Bold"
+                                           Foreground="#2C3E50" Margin="0,0,0,20"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="RbUsb" GroupName="PrinterType" IsChecked="True"
+                                                         Checked="PrinterType_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                            <TextBlock Text="USB" FontSize="14" FontWeight="SemiBold"
+                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border CornerRadius="10" Padding="16,12" Background="#F8F9FA">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="RbLan" GroupName="PrinterType"
+                                                         Checked="PrinterType_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Ag (LAN)" FontSize="14" FontWeight="SemiBold"
+                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel x:Name="PanelUsb" Margin="0,0,0,16">
+                                    <TextBlock Text="Yazici Adi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBox x:Name="TxtUsbPrinterName" Height="44" FontSize="15"
+                                             HorizontalAlignment="Left" Width="320"/>
+                                </StackPanel>
+                                <StackPanel x:Name="PanelLan" Visibility="Collapsed" Margin="0,0,0,16">
+                                    <TextBlock Text="IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBox x:Name="TxtLanIp" Height="44" FontSize="15"
+                                             HorizontalAlignment="Left" Width="240" Margin="0,0,0,12"/>
+                                    <TextBlock Text="Port" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBox x:Name="TxtLanPort" Height="44" FontSize="15"
+                                             HorizontalAlignment="Left" Width="120" Text="9100"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource PrimaryButton}" Height="48" FontSize="15"
+                                            Padding="24,0" Margin="0,0,12,0" Click="BtnSavePrinter_Click">
+                                        <TextBlock Text="Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                    <Button Style="{StaticResource SecondaryButton}" Height="48" FontSize="15"
+                                            Padding="24,0" Click="BtnTestPrint_Click">
+                                        <TextBlock Text="Test Bas" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- TOAST -->
+        <Border x:Name="ToastBorder" Grid.ColumnSpan="2"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="0,0,24,24" Opacity="0"
+                CornerRadius="10" Padding="18,12" MinWidth="200"
+                Panel.ZIndex="100">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="12" ShadowDepth="4" Color="#000000" Opacity="0.2"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="ToastIcon" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <TextBlock x:Name="ToastMessage" FontSize="14" FontWeight="SemiBold"
+                           Foreground="White" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Page>

@@ -1,0 +1,563 @@
+<Page x:Class="EsnafPos.Views.ReportsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Raporlar" Background="#F0F4F8">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- İstemci modu uyarısı - tüm Grid'i kaplar -->
+        <Border x:Name="PanelClientMode" Grid.RowSpan="3" Background="#F0F4F8"
+                Visibility="Collapsed" Panel.ZIndex="10">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border Background="White" CornerRadius="16" Padding="48,40">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="📊" FontSize="52" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                        <TextBlock Text="Raporlar yalnizca sunucu bilgisayarinda kullanilabilir."
+                                   FontSize="18" FontWeight="SemiBold"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                        <TextBlock Text="Raporlari gormek icin sunucu bilgisayarindaki uygulamayi kullanin."
+                                   FontSize="14" Foreground="{StaticResource MutedBrush}"
+                                   HorizontalAlignment="Center" Margin="0,10,0,0"
+                                   TextWrapping="Wrap" TextAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- BASLIK + BUTONLAR -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="Raporlar" FontSize="20" FontWeight="Bold"
+                       Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="BtnChangeLog" Height="36" Padding="20,0"
+                        Margin="0,0,12,0" BorderThickness="0"
+                        Background="{StaticResource WarningBrush}"
+                        Click="BtnChangeLog_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  Margin="0"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <TextBlock Text="Urun Degisim Kayitlari" Foreground="White"
+                               FontWeight="SemiBold" FontSize="13" Margin="2,0"/>
+                </Button>
+                <Button Style="{StaticResource DarkButton}"
+                        Height="36" FontSize="13" Padding="20,0"
+                        Click="BtnOrderHistory_Click">
+                    <TextBlock Text="Gecmis Hesaplar" Foreground="White" FontWeight="SemiBold"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- SEKME BUTONLARI -->
+        <Border x:Name="PanelTabs" Grid.Row="1" Background="White" CornerRadius="12"
+                Padding="8" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BtnTabDaily" Height="40" Padding="36,0" Margin="0,0,12,0"
+                        FontSize="17" FontWeight="SemiBold" BorderThickness="0"
+                        Click="BtnTabDaily_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button x:Name="BtnTabWeekly" Height="40" Padding="36,0" Margin="0,0,12,0"
+                        FontSize="17" FontWeight="SemiBold" BorderThickness="0"
+                        Click="BtnTabWeekly_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button x:Name="BtnTabMonthly" Height="40" Padding="36,0"
+                        FontSize="17" FontWeight="SemiBold" BorderThickness="0"
+                        Click="BtnTabMonthly_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- ICERIK -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <!-- Her sekme icin ayri icerik -->
+
+                <!-- ══════ GUNLUK ══════ -->
+                <StackPanel x:Name="PanelDailyReport" Visibility="Visible">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="360"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SOL KUTU: Filtre + Kartlar -->
+                        <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="16" VerticalAlignment="Top">
+                            <StackPanel>
+                                <!-- Gün navigasyon -->
+                                <Border Background="#F0F4F8" CornerRadius="10" Padding="8,6" Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Width="34" Height="34"
+                                                Background="{StaticResource PrimaryBrush}" BorderThickness="0"
+                                                Click="BtnPreviousDay_Click">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Opacity" Value="0.85"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                            <TextBlock Text="◀" Foreground="White" FontSize="13" FontWeight="Bold"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <TextBlock Grid.Column="1" x:Name="TxtDailyDateLabel"
+                                                   FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource PrimaryBrush}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="2" Width="34" Height="34"
+                                                Background="{StaticResource PrimaryBrush}" BorderThickness="0"
+                                                Click="BtnNextDay_Click">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Opacity" Value="0.85"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                            <TextBlock Text="▶" Foreground="White" FontSize="13" FontWeight="Bold"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <TextBlock Text="Tarih:" VerticalAlignment="Center"
+                                               FontSize="13" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                                    <DatePicker SelectedDate="{Binding SelectedDate}"
+                                                FontSize="13" Width="140" Height="34" Margin="0,0,8,0"/>
+                                    <Button Style="{StaticResource PrimaryButton}"
+                                            Height="34" FontSize="13" Padding="14,0"
+                                            Command="{Binding LoadDailyReportCommand}">
+                                        <TextBlock Text="Getir" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                </StackPanel>
+
+                                <Border Background="{StaticResource AccentBrush}"
+                                        CornerRadius="10" Padding="14,10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <TextBlock Text="Toplam Ciro" Foreground="White" FontSize="13" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding DailyTotal, StringFormat='{}{0:N2} TL'}"
+                                                   Foreground="White" FontSize="22" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{StaticResource PrimaryBrush}"
+                                            CornerRadius="10" Padding="12,10">
+                                        <StackPanel>
+                                            <TextBlock Text="Nakit" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding DailyCash, StringFormat='{}{0:N2} TL'}"
+                                                       Foreground="White" FontSize="15" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="2" Background="{StaticResource WarningBrush}"
+                                            CornerRadius="10" Padding="12,10">
+                                        <StackPanel>
+                                            <TextBlock Text="Kart" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding DailyCard, StringFormat='{}{0:N2} TL'}"
+                                                       Foreground="White" FontSize="15" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <Border Background="{StaticResource MutedBrush}"
+                                        CornerRadius="10" Padding="12,10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <TextBlock Text="Siparis Sayisi" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding DailyOrderCount}"
+                                                   Foreground="White" FontSize="17" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="#F5EEF8" CornerRadius="8" Padding="12,8" Margin="0,0,0,10"
+                                        Visibility="{Binding DailyHasVeresiye, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Bekleyen Veresiye:" FontSize="14"
+                                                   Foreground="#8E44AD" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Text="{Binding DailyVeresiye, StringFormat='({0:N2} TL)'}"
+                                                   FontSize="14" FontWeight="Bold" Foreground="#8E44AD"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Button Height="36" FontSize="13" Padding="14,0"
+                                        Background="#27AE60" BorderThickness="0" HorizontalAlignment="Left"
+                                        Click="BtnExportDaily_Click">
+                                    <TextBlock Text="⬇ Excel Indir" Foreground="White" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- SAG KUTU: Urun Tablosu -->
+                        <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="Urun Bazli Satislar" FontSize="15" FontWeight="Bold"
+                                           Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,10"/>
+                                <DataGrid ItemsSource="{Binding DailyProductSales}"
+                                          AutoGenerateColumns="False" IsReadOnly="True"
+                                          GridLinesVisibility="Horizontal" BorderThickness="0"
+                                          Background="Transparent" RowBackground="White"
+                                          AlternatingRowBackground="#F8F9FA"
+                                          FontSize="15" FontWeight="SemiBold" RowHeight="42">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Urun Adi" Binding="{Binding ProductName}" Width="*"/>
+                                        <DataGridTextColumn Header="Porsiyon" Binding="{Binding Portion}" Width="110"/>
+                                        <DataGridTextColumn Header="Adet" Binding="{Binding TotalQuantity}" Width="70"/>
+                                        <DataGridTextColumn Header="Ciro (TL)"
+                                            Binding="{Binding TotalRevenue, StringFormat='{}{0:N2}'}" Width="130"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+                <!-- ══════ HAFTALIK ══════ -->
+                <StackPanel x:Name="PanelWeeklyReport" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="360"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SOL KUTU -->
+                        <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="16" VerticalAlignment="Top">
+                            <StackPanel>
+                                <Border Background="#F0F4F8" CornerRadius="10" Padding="12,10" Margin="0,0,0,16">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Width="42" Height="42"
+                                                Background="{StaticResource PrimaryBrush}" BorderThickness="0"
+                                                Command="{Binding PreviousWeekCommand}">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                            <TextBlock Text="◀" Foreground="White" FontSize="15" FontWeight="Bold"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <TextBlock Grid.Column="1" Text="{Binding WeekLabel}"
+                                                   FontSize="14" FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="2" Width="42" Height="42"
+                                                Background="{StaticResource PrimaryBrush}" BorderThickness="0"
+                                                Command="{Binding NextWeekCommand}">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                            <TextBlock Text="▶" Foreground="White" FontSize="15" FontWeight="Bold"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+
+                                <Button Style="{StaticResource PrimaryButton}"
+                                        Height="42" FontSize="14" Padding="18,0"
+                                        HorizontalAlignment="Left" Margin="0,0,0,20"
+                                        Command="{Binding LoadWeeklyReportCommand}">
+                                    <TextBlock Text="Raporu Getir" Foreground="White" FontWeight="SemiBold"/>
+                                </Button>
+
+                                <Border Background="{StaticResource AccentBrush}"
+                                        CornerRadius="10" Padding="14,10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <TextBlock Text="Toplam Ciro" Foreground="White" FontSize="13" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding WeeklyTotal, StringFormat='{}{0:N2} TL'}"
+                                                   Foreground="White" FontSize="22" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{StaticResource PrimaryBrush}"
+                                            CornerRadius="10" Padding="12,10">
+                                        <StackPanel>
+                                            <TextBlock Text="Nakit" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding WeeklyCash, StringFormat='{}{0:N2} TL'}"
+                                                       Foreground="White" FontSize="15" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="2" Background="{StaticResource WarningBrush}"
+                                            CornerRadius="10" Padding="12,10">
+                                        <StackPanel>
+                                            <TextBlock Text="Kart" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding WeeklyCard, StringFormat='{}{0:N2} TL'}"
+                                                       Foreground="White" FontSize="15" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <Border Background="{StaticResource MutedBrush}"
+                                        CornerRadius="10" Padding="12,10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <TextBlock Text="Siparis Sayisi" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding WeeklyOrderCount}"
+                                                   Foreground="White" FontSize="17" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="#F5EEF8" CornerRadius="8" Padding="12,8" Margin="0,0,0,10"
+                                        Visibility="{Binding WeeklyHasVeresiye, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Bekleyen Veresiye:" FontSize="14"
+                                                   Foreground="#8E44AD" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Text="{Binding WeeklyVeresiye, StringFormat='({0:N2} TL)'}"
+                                                   FontSize="14" FontWeight="Bold" Foreground="#8E44AD"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Button Height="36" FontSize="13" Padding="14,0"
+                                        Background="#27AE60" BorderThickness="0" HorizontalAlignment="Left"
+                                        Click="BtnExportWeekly_Click">
+                                    <TextBlock Text="⬇ Excel Indir" Foreground="White" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- SAG KUTU -->
+                        <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="Urun Bazli Satislar" FontSize="15" FontWeight="Bold"
+                                           Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,10"/>
+                                <DataGrid ItemsSource="{Binding WeeklyProductSales}"
+                                          AutoGenerateColumns="False" IsReadOnly="True"
+                                          GridLinesVisibility="Horizontal" BorderThickness="0"
+                                          Background="Transparent" RowBackground="White"
+                                          AlternatingRowBackground="#F8F9FA"
+                                          FontSize="15" FontWeight="SemiBold" RowHeight="42">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Urun Adi" Binding="{Binding ProductName}" Width="*"/>
+                                        <DataGridTextColumn Header="Porsiyon" Binding="{Binding Portion}" Width="110"/>
+                                        <DataGridTextColumn Header="Adet" Binding="{Binding TotalQuantity}" Width="70"/>
+                                        <DataGridTextColumn Header="Ciro (TL)"
+                                            Binding="{Binding TotalRevenue, StringFormat='{}{0:N2}'}" Width="130"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+                <!-- ══════ AYLIK ══════ -->
+                <StackPanel x:Name="PanelMonthlyReport" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="360"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SOL KUTU -->
+                        <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="16" VerticalAlignment="Top">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="Ay:" VerticalAlignment="Center"
+                                               FontSize="15" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                    <ComboBox SelectedValue="{Binding SelectedMonth}" SelectedValuePath="Tag"
+                                              FontSize="15" Width="130" Height="42">
+                                        <ComboBoxItem Content="Ocak"    Tag="1"/>
+                                        <ComboBoxItem Content="Subat"   Tag="2"/>
+                                        <ComboBoxItem Content="Mart"    Tag="3"/>
+                                        <ComboBoxItem Content="Nisan"   Tag="4"/>
+                                        <ComboBoxItem Content="Mayis"   Tag="5"/>
+                                        <ComboBoxItem Content="Haziran" Tag="6"/>
+                                        <ComboBoxItem Content="Temmuz"  Tag="7"/>
+                                        <ComboBoxItem Content="Agustos" Tag="8"/>
+                                        <ComboBoxItem Content="Eylul"   Tag="9"/>
+                                        <ComboBoxItem Content="Ekim"    Tag="10"/>
+                                        <ComboBoxItem Content="Kasim"   Tag="11"/>
+                                        <ComboBoxItem Content="Aralik"  Tag="12"/>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <TextBlock Text="Yil:" VerticalAlignment="Center"
+                                               FontSize="15" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                    <TextBox Text="{Binding SelectedYear}"
+                                             FontSize="15" Width="90" Height="42" Margin="0,0,10,0"/>
+                                    <Button Style="{StaticResource PrimaryButton}"
+                                            Height="42" FontSize="14" Padding="18,0"
+                                            Command="{Binding LoadMonthlyReportCommand}">
+                                        <TextBlock Text="Getir" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                </StackPanel>
+
+                                <Border Background="{StaticResource AccentBrush}"
+                                        CornerRadius="10" Padding="14,10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <TextBlock Text="Toplam Ciro" Foreground="White" FontSize="13" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding MonthlyTotal, StringFormat='{}{0:N2} TL'}"
+                                                   Foreground="White" FontSize="22" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{StaticResource PrimaryBrush}"
+                                            CornerRadius="10" Padding="12,10">
+                                        <StackPanel>
+                                            <TextBlock Text="Nakit" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding MonthlyCash, StringFormat='{}{0:N2} TL'}"
+                                                       Foreground="White" FontSize="15" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="2" Background="{StaticResource WarningBrush}"
+                                            CornerRadius="10" Padding="12,10">
+                                        <StackPanel>
+                                            <TextBlock Text="Kart" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding MonthlyCard, StringFormat='{}{0:N2} TL'}"
+                                                       Foreground="White" FontSize="15" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <Border Background="{StaticResource MutedBrush}"
+                                        CornerRadius="10" Padding="12,10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <TextBlock Text="Siparis Sayisi" Foreground="White" FontSize="12" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding MonthlyOrderCount}"
+                                                   Foreground="White" FontSize="17" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="#F5EEF8" CornerRadius="8" Padding="12,8" Margin="0,0,0,10"
+                                        Visibility="{Binding MonthlyHasVeresiye, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Bekleyen Veresiye:" FontSize="14"
+                                                   Foreground="#8E44AD" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Text="{Binding MonthlyVeresiye, StringFormat='({0:N2} TL)'}"
+                                                   FontSize="14" FontWeight="Bold" Foreground="#8E44AD"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Button Height="36" FontSize="13" Padding="14,0"
+                                        Background="#27AE60" BorderThickness="0" HorizontalAlignment="Left"
+                                        Click="BtnExportMonthly_Click">
+                                    <TextBlock Text="⬇ Excel Indir" Foreground="White" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- SAG KUTU -->
+                        <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="Urun Bazli Satislar" FontSize="15" FontWeight="Bold"
+                                           Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,10"/>
+                                <DataGrid ItemsSource="{Binding MonthlyProductSales}"
+                                          AutoGenerateColumns="False" IsReadOnly="True"
+                                          GridLinesVisibility="Horizontal" BorderThickness="0"
+                                          Background="Transparent" RowBackground="White"
+                                          AlternatingRowBackground="#F8F9FA"
+                                          FontSize="15" FontWeight="SemiBold" RowHeight="42">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Urun Adi" Binding="{Binding ProductName}" Width="*"/>
+                                        <DataGridTextColumn Header="Porsiyon" Binding="{Binding Portion}" Width="110"/>
+                                        <DataGridTextColumn Header="Adet" Binding="{Binding TotalQuantity}" Width="70"/>
+                                        <DataGridTextColumn Header="Ciro (TL)"
+                                            Binding="{Binding TotalRevenue, StringFormat='{}{0:N2}'}" Width="130"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,204 @@
+<Page x:Class="EsnafPos.Views.TablesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:vm="clr-namespace:EsnafPos.ViewModels"
+      xmlns:models="clr-namespace:EsnafPos.Models"
+      Title="Masalar" Background="{StaticResource LightBrush}">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Çevrimdışı uyarı şeridi -->
+        <Border x:Name="PanelOfflineWarning" Grid.Row="0"
+                Background="#E74C3C" CornerRadius="10"
+                Padding="16,10" Margin="0,0,0,12"
+                Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="⚠" FontSize="16" Foreground="White"
+                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="Sunucuya bağlanılamıyor. Bağlantı kontrol ediliyor..."
+                           FontSize="14" FontWeight="SemiBold" Foreground="White"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+
+        <!-- Lisans uyarı şeridi -->
+        <Border x:Name="PanelLicenseWarning" Grid.Row="1"
+                CornerRadius="10" Padding="16,10" Margin="0,0,0,8"
+                Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="⚠" FontSize="16" Foreground="White"
+                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock x:Name="TxtLicenseWarning"
+                           FontSize="14" FontWeight="SemiBold" Foreground="White"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Grid.Row="0" Text="Masalar"
+                   FontSize="24" FontWeight="Bold"
+                   Foreground="{StaticResource PrimaryBrush}"
+                   Margin="0,40,0,20"/>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding AllCards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.Resources>
+
+                    <!-- MASA KARTI -->
+                    <DataTemplate DataType="{x:Type models:Table}">
+                        <Button Width="190" Height="90" Margin="8"
+                                Click="TableButton_Click" Tag="{Binding}"
+                                BorderThickness="0" Padding="0" Background="Transparent">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="White" CornerRadius="12"
+                                            x:Name="CardBorder">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="10" ShadowDepth="2"
+                                                              Color="#BBBBBB" Opacity="0.18"/>
+                                        </Border.Effect>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="12,0,0,12"
+                                                    x:Name="StatusStrip"
+                                                    Background="{StaticResource AccentBrush}"/>
+                                            <StackPanel Grid.Column="1" Margin="14,0,12,0"
+                                                        VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontSize="17" FontWeight="Bold"
+                                                           Foreground="{StaticResource PrimaryBrush}"
+                                                           Margin="0,0,0,6"/>
+                                                <TextBlock x:Name="TxtBos" Text="Bos"
+                                                           FontSize="13" Foreground="{StaticResource MutedBrush}"/>
+                                                <StackPanel x:Name="PnlAcik" Visibility="Collapsed" Margin="0,0,0,0">
+                                                    <TextBlock x:Name="TxtAcik"
+                                                               Text="{Binding CurrentTotal, StringFormat='{}{0:N2} TL'}"
+                                                               FontSize="14" FontWeight="Bold"
+                                                               Foreground="{StaticResource WarningBrush}"/>
+                                                    <TextBlock Text="{Binding ElapsedText}"
+                                                               FontSize="13" FontWeight="SemiBold"
+                                                               Foreground="#5D8AA8"
+                                                               Margin="0,3,0,0"/>
+                                                </StackPanel>
+                                                <StackPanel x:Name="PnlOdeme" Visibility="Collapsed">
+                                                    <TextBlock Text="{Binding CurrentTotal, StringFormat='{}{0:N2} TL'}"
+                                                               FontSize="15" FontWeight="Bold"
+                                                               Foreground="{StaticResource DangerBrush}"/>
+                                                    <TextBlock Text="Odeme Bekliyor"
+                                                               FontSize="11" Foreground="{StaticResource DangerBrush}"
+                                                               Opacity="0.8" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.88"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.72"/>
+                                        </Trigger>
+                                        <DataTrigger Binding="{Binding Status}"
+                                                     Value="{x:Static models:TableStatus.Active}">
+                                            <Setter TargetName="StatusStrip" Property="Background"
+                                                    Value="{StaticResource WarningBrush}"/>
+                                            <Setter TargetName="TxtBos"   Property="Visibility" Value="Collapsed"/>
+                                            <Setter TargetName="PnlAcik"  Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}"
+                                                     Value="{x:Static models:TableStatus.PaymentPending}">
+                                            <Setter TargetName="StatusStrip" Property="Background"
+                                                    Value="{StaticResource DangerBrush}"/>
+                                            <Setter TargetName="TxtBos"   Property="Visibility" Value="Collapsed"/>
+                                            <Setter TargetName="PnlOdeme" Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:VeresiyeCardItem}">
+                        <Button Width="190" Height="90" Margin="8"
+                                BorderThickness="0" Padding="0" Background="Transparent"
+                                Tag="{Binding}" Click="VeresiyeButton_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="White" CornerRadius="12" x:Name="CardBorder">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="10" ShadowDepth="2"
+                                                              Color="#BBBBBB" Opacity="0.18"/>
+                                        </Border.Effect>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Sol mor serit -->
+                                            <Border Grid.Column="0" CornerRadius="12,0,0,12"
+                                                    Background="#8E44AD"/>
+                                            <!-- Icerik -->
+                                            <Grid Grid.Column="1" Margin="14,0,12,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <!-- Avatar -->
+                                                <Border Width="38" Height="38" CornerRadius="19"
+                                                        Background="#8E44AD"
+                                                        VerticalAlignment="Center" Margin="0,0,12,0">
+                                                    <TextBlock Text="{Binding Initial}"
+                                                               FontSize="17" FontWeight="Bold"
+                                                               Foreground="White"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                                <!-- Ad + Tutar -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding CustomerName}"
+                                                               FontSize="16" FontWeight="Bold"
+                                                               Foreground="{StaticResource PrimaryBrush}"
+                                                               TextWrapping="Wrap" Margin="0,0,0,5"/>
+                                                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N2} TL'}"
+                                                               FontSize="14" FontWeight="Bold"
+                                                               Foreground="#8E44AD"/>
+                                                    <TextBlock Text="{Binding ElapsedText}"
+                                                               FontSize="13" FontWeight="SemiBold"
+                                                               Foreground="#5D8AA8"
+                                                               Margin="0,3,0,0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.88"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.72"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+
+                </ItemsControl.Resources>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Page>

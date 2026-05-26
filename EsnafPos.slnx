@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../EsnafPos.License/EsnafPos.License.csproj" />
+  <Project Path="EsnafPos.csproj" />
+</Solution>
