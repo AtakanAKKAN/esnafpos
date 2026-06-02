@@ -270,7 +270,7 @@ namespace EsnafPos
                 Log("Ana pencere açıldı.");
 
                 // ─── GÜNCELLEME KONTROLÜ ─────────────────────────────
-                Task.Run(async () =>
+                _ = Task.Run(async () =>
                 {
                     try
                     {
