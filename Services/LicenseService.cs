@@ -50,7 +50,7 @@ namespace EsnafPos.Services
         private static readonly string _licenseApiUrl =
             "https://esnaflisans.onrender.com";
 
-        private CancellationTokenSource? _periodicCts;
+        private CancellationTokenSource? _periodicCts = null;
 
         // ─── FIX-1: Kalan gün hesabı — UTC/yerel saat dilimi güvenli ─
         private static int CalcRemaining(LicenseCache cache)

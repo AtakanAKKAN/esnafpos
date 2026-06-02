@@ -13,8 +13,9 @@ namespace EsnafPos
     public partial class App : Application
     {
         public static IServiceProvider Services { get; private set; } = null!;
-        public static ApiServer?       Server   { get; private set; }
-        public static ApiClient?       Client   { get; private set; }
+        public static ApiServer?       Server       { get; private set; }
+        public static ApiClient?       Client       { get; private set; }
+        private static CancellationTokenSource _discoveryCts = new();
         public static LicenseService   License  { get; private set; } = new();
 
         private static Mutex? _mutex;
@@ -50,7 +51,7 @@ namespace EsnafPos
         private static extern bool IsIconic(IntPtr hWnd);
         private const int SW_RESTORE = 9;
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
             {
@@ -222,10 +223,32 @@ namespace EsnafPos
                                     "Sunucu Hatasi", MessageBoxButton.OK, MessageBoxImage.Error));
                         }
                     });
+
+                    // Discovery listener — istemciler otomatik bulsun
+                    _ = NetworkDiscovery.StartListenerAsync(net.ServerPort, _discoveryCts.Token);
                 }
                 else if (net.Mode == AppMode.Client)
                 {
-                    Client = new ApiClient(net.ServerIp, net.ServerPort,
+                    // Önce ağda sunucuyu otomatik bul
+                    var (discoveredIp, discoveredPort) = await NetworkDiscovery.DiscoverServerAsync(timeoutMs: 4000);
+
+                    string serverIp   = discoveredIp   ?? net.ServerIp;
+                    int    serverPort = discoveredPort > 0 ? discoveredPort : net.ServerPort;
+
+                    if (discoveredIp != null)
+                    {
+                        Log($"Sunucu otomatik bulundu: {serverIp}:{serverPort}");
+                        // Bulunan IP'yi kaydet — bir sonraki açılış için fallback
+                        net.ServerIp   = serverIp;
+                        net.ServerPort = serverPort;
+                        settings.Save();
+                    }
+                    else
+                    {
+                        Log($"Otomatik keşif başarısız, kayıtlı IP kullanılıyor: {serverIp}:{serverPort}");
+                    }
+
+                    Client = new ApiClient(serverIp, serverPort,
                         net.ApiUsername, net.ApiPassword);
                 }
 
