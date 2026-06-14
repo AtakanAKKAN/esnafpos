@@ -84,6 +84,8 @@ namespace EsnafPos.Views
         // ─── LİSANS UYARI BANNER'I ───────────────────────────────────
         private void ShowLicenseBanner()
         {
+            // İstemci modunda lisans kontrolü yapılmaz — banner gösterme
+            if (App.Client != null) return;
 #if DEBUG
             return; // Debug modda gösterme
 #else

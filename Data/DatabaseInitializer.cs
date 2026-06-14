@@ -10,6 +10,10 @@ namespace EsnafPos.Data
         {
             context.Database.EnsureCreated();
 
+            // EnsureCreated eski DB'ye yeni tabloları eklemez —
+            // AppChannels'ı seed'den önce garantiye al (aksi halde AppChannels.Any() patlar)
+            context.EnsureChannelsTable();
+
             // Kullanıcı yoksa admin + kasiyer ekle
             if (!context.Users.Any())
             {

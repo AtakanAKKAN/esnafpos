@@ -9,13 +9,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Çevrimdışı uyarı şeridi -->
         <Border x:Name="PanelOfflineWarning" Grid.Row="0"
                 Background="#E74C3C" CornerRadius="10"
-                Padding="16,10" Margin="0,0,0,12"
+                Padding="16,10" Margin="0,0,0,8"
                 Visibility="Collapsed">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="⚠" FontSize="16" Foreground="White"
@@ -25,7 +26,6 @@
                            VerticalAlignment="Center"/>
             </StackPanel>
         </Border>
-
 
         <!-- Lisans uyarı şeridi -->
         <Border x:Name="PanelLicenseWarning" Grid.Row="1"
@@ -40,12 +40,14 @@
             </StackPanel>
         </Border>
 
-        <TextBlock Grid.Row="0" Text="Masalar"
+        <!-- Sayfa başlığı -->
+        <TextBlock Grid.Row="2" Text="Masalar"
                    FontSize="24" FontWeight="Bold"
                    Foreground="{StaticResource PrimaryBrush}"
-                   Margin="0,40,0,20"/>
+                   Margin="0,12,0,20"/>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+        <!-- Masa kartları -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding AllCards}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -84,9 +86,8 @@
                                                            Margin="0,0,0,6"/>
                                                 <TextBlock x:Name="TxtBos" Text="Bos"
                                                            FontSize="13" Foreground="{StaticResource MutedBrush}"/>
-                                                <StackPanel x:Name="PnlAcik" Visibility="Collapsed" Margin="0,0,0,0">
-                                                    <TextBlock x:Name="TxtAcik"
-                                                               Text="{Binding CurrentTotal, StringFormat='{}{0:N2} TL'}"
+                                                <StackPanel x:Name="PnlAcik" Visibility="Collapsed">
+                                                    <TextBlock Text="{Binding CurrentTotal, StringFormat='{}{0:N2} TL'}"
                                                                FontSize="14" FontWeight="Bold"
                                                                Foreground="{StaticResource WarningBrush}"/>
                                                     <TextBlock Text="{Binding ElapsedText}"
@@ -132,6 +133,7 @@
                         </Button>
                     </DataTemplate>
 
+                    <!-- VERESİYE KARTI -->
                     <DataTemplate DataType="{x:Type vm:VeresiyeCardItem}">
                         <Button Width="190" Height="90" Margin="8"
                                 BorderThickness="0" Padding="0" Background="Transparent"
@@ -148,16 +150,13 @@
                                                 <ColumnDefinition Width="8"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <!-- Sol mor serit -->
                                             <Border Grid.Column="0" CornerRadius="12,0,0,12"
                                                     Background="#8E44AD"/>
-                                            <!-- Icerik -->
                                             <Grid Grid.Column="1" Margin="14,0,12,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
-                                                <!-- Avatar -->
                                                 <Border Width="38" Height="38" CornerRadius="19"
                                                         Background="#8E44AD"
                                                         VerticalAlignment="Center" Margin="0,0,12,0">
@@ -167,7 +166,6 @@
                                                                HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"/>
                                                 </Border>
-                                                <!-- Ad + Tutar -->
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding CustomerName}"
                                                                FontSize="16" FontWeight="Bold"

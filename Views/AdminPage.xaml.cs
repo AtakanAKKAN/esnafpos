@@ -486,6 +486,8 @@ namespace EsnafPos.Views
 
         private void LoadLicenseInfo()
         {
+            // İstemci modunda lisans kontrolü yapılmaz — lisans bilgisi gösterme
+            if (App.Client != null) return;
 #if DEBUG
             PanelLicenseInfo.Background = new SolidColorBrush(Color.FromRgb(232, 245, 233));
             TxtLicenseIcon.Text    = "🛠";
