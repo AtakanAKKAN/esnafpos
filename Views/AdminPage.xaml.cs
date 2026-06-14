@@ -599,8 +599,26 @@ namespace EsnafPos.Views
         {
             if (PanelClientSettings == null) return;
             bool isClient = RbClient?.IsChecked == true;
+            bool isServer = RbServer?.IsChecked == true;
             PanelClientSettings.Visibility = isClient ? Visibility.Visible : Visibility.Collapsed;
             PanelTestConnection.Visibility  = isClient ? Visibility.Visible : Visibility.Collapsed;
+            PanelServerInfo.Visibility      = isServer ? Visibility.Visible : Visibility.Collapsed;
+            if (isServer) PopulateServerInfo();
+        }
+
+        // Sunucu modunda: istemciye yazilacak bilgisayar adi + LAN IP'lerini goster
+        private void PopulateServerInfo()
+        {
+            try
+            {
+                TxtServerName.Text = Environment.MachineName;
+                var ips = System.Net.Dns.GetHostAddresses(Environment.MachineName)
+                    .Where(a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    .Select(a => a.ToString())
+                    .ToList();
+                TxtServerIps.Text = ips.Count > 0 ? "IP: " + string.Join(", ", ips) : "";
+            }
+            catch { }
         }
 
         private void BtnSaveNetwork_Click(object sender, RoutedEventArgs e)

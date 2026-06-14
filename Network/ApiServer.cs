@@ -394,7 +394,12 @@ namespace EsnafPos.Network
                 return Results.Ok();
             });
 
-            await _app.RunAsync($"http://0.0.0.0:{port}");
+            // IPv4 + IPv6 birlikte dinle — bilgisayar adlari (hostname) genelde once IPv6'ya
+            // cozuldugu icin istemci "http://SUNUCU-ADI:5150" ile baglanabilsin.
+            // (Yalniz 0.0.0.0 IPv4 idi; hostname IPv6'ya gidip baglanti kuramiyordu.)
+            _app.Urls.Add($"http://0.0.0.0:{port}");
+            _app.Urls.Add($"http://[::]:{port}");
+            await _app.RunAsync();
         }
 
         public async Task StopAsync()

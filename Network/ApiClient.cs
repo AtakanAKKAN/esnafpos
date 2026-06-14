@@ -12,29 +12,109 @@ namespace EsnafPos.Network
     public class ApiClient
     {
         private readonly HttpClient _http;
-        private readonly string _baseUrl;
+        private readonly List<string> _candidates;
+        private string _baseUrl;
         private bool _isConnected = false;
+        private bool _resolved    = false;
 
-        public bool IsConnected => _isConnected;
+        // Son başarılı sunucu IP'si — isim çözümlemesi tamamen çökerse son çare
+        private static readonly string _ipCachePath = System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "EsnafPos", "server_ip.cache");
 
-        public ApiClient(string serverIp, int port, string username, string password)
+        public bool   IsConnected => _isConnected;
+        public string BaseUrl     => _baseUrl;
+
+        // serverHost: IP veya bilgisayar adı (hostname). Ad yazılırsa IP değişse bile
+        // OS adı her seferinde tazeden çözer; ayrıca .local (mDNS) ve önbellekteki IP
+        // yedek aday olarak denenir.
+        public ApiClient(string serverHost, int port, string username, string password)
         {
-            _baseUrl = $"http://{serverIp}:{port}";
-            _http    = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
+            var host    = (serverHost ?? "").Trim();
+            _candidates = BuildCandidates(host, port);
+            _baseUrl    = _candidates.Count > 0 ? _candidates[0] : $"http://{host}:{port}";
+            _http       = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
             _http.DefaultRequestHeaders.Add("X-Api-Key",
                 ApiServer.BuildApiKey(username, password));
+        }
+
+        private static List<string> BuildCandidates(string host, int port)
+        {
+            var list = new List<string>();
+            if (!string.IsNullOrWhiteSpace(host))
+            {
+                list.Add($"http://{host}:{port}");
+                // Hostname (IP değil ve nokta içermiyor) ise mDNS .local varyantını da dene
+                bool isIp = System.Net.IPAddress.TryParse(host, out _);
+                if (!isIp && !host.Contains('.'))
+                    list.Add($"http://{host}.local:{port}");
+            }
+            try
+            {
+                if (System.IO.File.Exists(_ipCachePath))
+                {
+                    var cachedIp  = System.IO.File.ReadAllText(_ipCachePath).Trim();
+                    var cachedUrl = $"http://{cachedIp}:{port}";
+                    if (!string.IsNullOrWhiteSpace(cachedIp) && !list.Contains(cachedUrl))
+                        list.Add(cachedUrl);
+                }
+            }
+            catch { }
+            return list;
+        }
+
+        // İlk çalışan adayı bulup _baseUrl yapar; bulunan adresi IP olarak önbelleğe yazar.
+        private async Task EnsureResolvedAsync()
+        {
+            if (_resolved) return;
+            foreach (var candidate in _candidates)
+            {
+                try
+                {
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                    var resp = await _http.GetAsync($"{candidate}/api/tables", cts.Token);
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        _baseUrl     = candidate;
+                        _resolved    = true;
+                        _isConnected = true;
+                        await CacheResolvedIpAsync(candidate);
+                        return;
+                    }
+                }
+                catch { /* sonraki adayı dene */ }
+            }
+            _isConnected = false;
+        }
+
+        private static async Task CacheResolvedIpAsync(string baseUrl)
+        {
+            try
+            {
+                var host = new Uri(baseUrl).Host;
+                string ip;
+                if (System.Net.IPAddress.TryParse(host, out var parsed))
+                    ip = parsed.ToString();
+                else
+                {
+                    var addrs = await System.Net.Dns.GetHostAddressesAsync(host);
+                    var v4 = addrs.FirstOrDefault(a =>
+                        a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+                    if (v4 == null) return;
+                    ip = v4.ToString();
+                }
+                await System.IO.File.WriteAllTextAsync(_ipCachePath, ip);
+            }
+            catch { }
         }
 
         // ─── BAĞLANTI TEST ───────────────────────────────────
         public async Task<bool> TestConnectionAsync()
         {
-            try
-            {
-                var resp = await _http.GetAsync($"{_baseUrl}/api/tables");
-                _isConnected = resp.IsSuccessStatusCode;
-                return _isConnected;
-            }
-            catch { _isConnected = false; return false; }
+            // Her testte baştan dene — sunucu adresi değişmiş olabilir, hostname'i tercih et
+            _resolved = false;
+            await EnsureResolvedAsync();
+            return _isConnected;
         }
 
         // ─── LOGIN ───────────────────────────────────────────
@@ -54,6 +134,7 @@ namespace EsnafPos.Network
         {
             try
             {
+                await EnsureResolvedAsync();   // login'de ilk temas — çalışan sunucu adresini bul
                 var result = await _http.GetFromJsonAsync<List<UserDto>>($"{_baseUrl}/api/users");
                 return result ?? new();
             }
