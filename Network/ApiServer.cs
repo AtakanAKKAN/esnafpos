@@ -122,7 +122,19 @@ namespace EsnafPos.Network
                     .Where(o => o.Status == OrderStatus.Open || o.Status == OrderStatus.Veresiye)
                     .Include(o => o.Items)
                     .ToListAsync();
-                return Results.Ok(orders);
+                // DTO'ya projekte et — ham entity'de Order<->OrderItem geri-referansi
+                // System.Text.Json'da "object cycle" hatasi verip 500'e yol aciyor.
+                return Results.Ok(orders.Select(o => new {
+                    o.Id, o.TableId, o.TableNameSnapshot,
+                    Status = o.Status.ToString(),
+                    o.TotalAmount, o.CreatedAt, o.LastItemAddedAt,
+                    Items = o.Items.Select(i => new {
+                        i.Id, i.OrderId, i.ProductId,
+                        i.NameSnapshot, i.PriceSnapshot,
+                        i.Portion, i.Quantity,
+                        i.CollectedQuantity, i.VeresiyeQuantity
+                    })
+                }));
             });
 
             _app.MapGet("/api/orders/{tableId:int}", async (int tableId, AppDbContext db) =>
