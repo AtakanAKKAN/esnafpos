@@ -1,7 +1,7 @@
 ﻿<Window x:Class="EsnafPos.Views.PortionWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Porsiyon Sec" Height="600" Width="440"
+        Title="Porsiyon Seç" Height="600" Width="440"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="{StaticResource LightBrush}">
@@ -65,7 +65,7 @@
             <Button Style="{StaticResource SecondaryButton}"
                     Height="52" FontSize="17"
                     Click="BtnCancel_Click">
-                <TextBlock Text="Iptal" Foreground="White" FontWeight="SemiBold"/>
+                <TextBlock Text="İptal" Foreground="White" FontWeight="SemiBold"/>
             </Button>
 
         </StackPanel>

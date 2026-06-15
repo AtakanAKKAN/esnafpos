@@ -13,7 +13,7 @@
                    HorizontalAlignment="Center" Margin="0,0,0,12"/>
 
         <TextBlock x:Name="TxtProductInfo" FontSize="16"
-                   Foreground="{StaticResource MutedBrush}"
+                   Foreground="{StaticResource SubtleTextBrush}"
                    HorizontalAlignment="Center" Margin="0,0,0,32"
                    TextWrapping="Wrap" TextAlignment="Center"/>
 
@@ -22,7 +22,7 @@
                 Click="BtnDegisim_Click">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="🔄" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                <TextBlock Text="Urun Degisimi" Foreground="White"
+                <TextBlock Text="Ürün Değişimi" Foreground="White"
                            FontWeight="Bold" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
@@ -32,7 +32,7 @@
                 Click="BtnIptal_Click">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="❌" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                <TextBlock Text="Urun Iptali" Foreground="White"
+                <TextBlock Text="Ürün İptali" Foreground="White"
                            FontWeight="Bold" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>

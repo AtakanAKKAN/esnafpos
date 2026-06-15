@@ -1,7 +1,7 @@
 <Window x:Class="EsnafPos.Views.OrderHistoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Gecmis Hesaplar" Height="780" Width="1000"
+        Title="Geçmiş Hesaplar" Height="780" Width="1000"
         WindowStartupLocation="CenterOwner"
         Background="#F0F4F8">
 
@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <!-- BASLIK -->
-        <TextBlock Grid.Row="0" Text="Gecmis Hesaplar"
+        <TextBlock Grid.Row="0" Text="Geçmiş Hesaplar"
                    FontSize="20" FontWeight="Bold"
                    Foreground="{StaticResource PrimaryBrush}"
                    Margin="0,0,0,10"/>
@@ -36,7 +36,7 @@
                 <Button Style="{StaticResource SecondaryButton}"
                         Height="36" FontSize="13" Padding="16,0"
                         Click="BtnAll_Click">
-                    <TextBlock Text="Tumunu Goster" Foreground="White" FontWeight="SemiBold"/>
+                    <TextBlock Text="Tümünü Göster" Foreground="White" FontWeight="SemiBold"/>
                 </Button>
                 <Border Background="#EBF5FB" CornerRadius="10" Padding="16,8" Margin="16,0,0,0"
                         VerticalAlignment="Center">
@@ -201,7 +201,7 @@
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Button.Style>
-                                                <TextBlock Text="Adisyon Yazdir"
+                                                <TextBlock Text="Adisyon Yazdır"
                                                            Foreground="White" FontWeight="SemiBold"/>
                                             </Button>
                                         </StackPanel>
@@ -216,7 +216,7 @@
             <!-- Yukleniyor overlay -->
             <Border x:Name="IsBusyOverlay" Background="#80FFFFFF"
                     CornerRadius="14" Visibility="Collapsed">
-                <TextBlock Text="Yukleniyor..." FontSize="18" FontWeight="SemiBold"
+                <TextBlock Text="Yükleniyor..." FontSize="18" FontWeight="SemiBold"
                            Foreground="{StaticResource PrimaryBrush}"
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
@@ -237,7 +237,7 @@
                         HorizontalAlignment="Left"
                         Style="{StaticResource SecondaryButton}"
                         Click="BtnPrevPage_Click">
-                    <TextBlock Text="◀  Onceki" Foreground="White" FontWeight="SemiBold" FontSize="13"/>
+                    <TextBlock Text="◀  Önceki" Foreground="White" FontWeight="SemiBold" FontSize="13"/>
                 </Button>
 
                 <TextBlock Grid.Column="1" x:Name="TxtPageInfo"
