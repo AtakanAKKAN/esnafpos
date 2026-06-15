@@ -347,12 +347,12 @@ namespace EsnafPos.ViewModels
         private async Task AddProduct()
         {
             ErrorMessage = "";
-            if (SelectedCategory == null) { ErrorMessage = "Once bir kategori secin!"; return; }
-            if (string.IsNullOrWhiteSpace(NewProductName)) { ErrorMessage = "Urun adi bos olamaz!"; return; }
+            if (SelectedCategory == null) { ErrorMessage = "Önce bir kategori seçin!"; return; }
+            if (string.IsNullOrWhiteSpace(NewProductName)) { ErrorMessage = "Ürün adı boş olamaz!"; return; }
 
             if (!TryParsePrice(NewProductPriceTam, out var priceTam))
             {
-                ErrorMessage = "Tam porsiyon fiyati zorunludur!";
+                ErrorMessage = "Tam porsiyon fiyatı zorunludur!";
                 return;
             }
 
@@ -459,7 +459,7 @@ namespace EsnafPos.ViewModels
             if (EditingProduct == null || string.IsNullOrWhiteSpace(EditProductName)) return;
             if (!TryParsePrice(EditProductPriceTam, out var priceTam))
             {
-                ErrorMessage = "Tam porsiyon fiyati zorunludur!";
+                ErrorMessage = "Tam porsiyon fiyatı zorunludur!";
                 return;
             }
 
@@ -510,19 +510,19 @@ namespace EsnafPos.ViewModels
             UserErrorMessage = "";
             if (string.IsNullOrWhiteSpace(NewUsername))
             {
-                UserErrorMessage = "Kullanici adi bos olamaz!";
+                UserErrorMessage = "Kullanıcı adı boş olamaz!";
                 return;
             }
             if (string.IsNullOrWhiteSpace(NewUserPin) || NewUserPin.Length < 4)
             {
-                UserErrorMessage = "Sifre en az 4 karakter olmalidir!";
+                UserErrorMessage = "Şifre en az 4 karakter olmalıdır!";
                 return;
             }
             var exists = await _db.Users.AnyAsync(u =>
                 u.Username == NewUsername.Trim() && u.IsActive);
             if (exists)
             {
-                UserErrorMessage = "Bu kullanici adi zaten kullaniliyor!";
+                UserErrorMessage = "Bu kullanıcı adı zaten kullanılıyor!";
                 return;
             }
             var user = new User
@@ -556,14 +556,14 @@ namespace EsnafPos.ViewModels
             if (EditingUser == null) return;
             if (string.IsNullOrWhiteSpace(EditUsername))
             {
-                UserErrorMessage = "Kullanici adi bos olamaz!";
+                UserErrorMessage = "Kullanıcı adı boş olamaz!";
                 return;
             }
             var exists = await _db.Users.AnyAsync(u =>
                 u.Username == EditUsername.Trim() && u.IsActive && u.Id != EditingUser.Id);
             if (exists)
             {
-                UserErrorMessage = "Bu kullanici adi zaten kullaniliyor!";
+                UserErrorMessage = "Bu kullanıcı adı zaten kullanılıyor!";
                 return;
             }
             EditingUser.Username = EditUsername.Trim();
@@ -571,7 +571,7 @@ namespace EsnafPos.ViewModels
             {
                 if (EditUserPin.Length < 4)
                 {
-                    UserErrorMessage = "Sifre en az 4 karakter olmalidir!";
+                    UserErrorMessage = "Şifre en az 4 karakter olmalıdır!";
                     return;
                 }
                 EditingUser.PinHash = HashPin(EditUserPin);

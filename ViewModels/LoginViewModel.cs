@@ -120,7 +120,7 @@ namespace EsnafPos.ViewModels
                     var result = await App.Client.LoginAsync(SelectedUser.Username, pinHash);
                     if (result == null)
                     {
-                        ErrorMessage = "PIN hatali!";
+                        ErrorMessage = "PIN hatalı!";
                         PressClear();
                         return;
                     }
@@ -145,7 +145,7 @@ namespace EsnafPos.ViewModels
 
                 if (user == null)
                 {
-                    ErrorMessage = "PIN hatali!";
+                    ErrorMessage = "PIN hatalı!";
                     PressClear();
                     return;
                 }

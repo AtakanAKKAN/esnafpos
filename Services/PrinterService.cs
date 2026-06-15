@@ -178,8 +178,8 @@ namespace EsnafPos.Services
         private static void ShowPrinterError(string msg)
         {
             System.Windows.MessageBox.Show(
-                $"Yazici hatasi: {msg}",
-                "Yazici Hatasi",
+                $"Yazıcı hatası: {msg}",
+                "Yazıcı Hatası",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Warning);
         }
@@ -207,7 +207,7 @@ namespace EsnafPos.Services
             }
 
             throw new Exception(
-                "Yazici ayarlanmamis.\nAdmin paneli → Yazici Ayarlari bolumunden ayarlayiniz.");
+                "Yazıcı ayarlanmamış.\nAdmin paneli → Yazıcı Ayarları bölümünden ayarlayınız.");
         }
 
         private static void RawPrint(string printerName, byte[] data)
@@ -215,13 +215,13 @@ namespace EsnafPos.Services
             var di = new DOCINFOA { pDocName = "ESC/POS", pDataType = "RAW" };
 
             if (!OpenPrinter(printerName, out var hPrinter, IntPtr.Zero))
-                throw new Exception($"Yazici acilamadi: {printerName}");
+                throw new Exception($"Yazıcı açılamadı: {printerName}");
 
             try
             {
-                if (!StartDocPrinter(hPrinter, 1, di)) throw new Exception("StartDocPrinter basarisiz.");
-                if (!StartPagePrinter(hPrinter)) throw new Exception("StartPagePrinter basarisiz.");
-                if (!WritePrinter(hPrinter, data, data.Length, out _)) throw new Exception("WritePrinter basarisiz.");
+                if (!StartDocPrinter(hPrinter, 1, di)) throw new Exception("StartDocPrinter başarısız.");
+                if (!StartPagePrinter(hPrinter)) throw new Exception("StartPagePrinter başarısız.");
+                if (!WritePrinter(hPrinter, data, data.Length, out _)) throw new Exception("WritePrinter başarısız.");
                 EndPagePrinter(hPrinter);
                 EndDocPrinter(hPrinter);
             }

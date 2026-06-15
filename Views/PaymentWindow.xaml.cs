@@ -141,14 +141,14 @@ namespace EsnafPos.Views
                 customerName = TxtVeresiyeName.Text.Trim();
                 if (string.IsNullOrEmpty(customerName))
                 {
-                    ShowError("Veresiye icin musteri adi giriniz!");
+                    ShowError("Veresiye için müşteri adı giriniz!");
                     return;
                 }
             }
 
             if (_vm.SelectedItemsTotal <= 0)
             {
-                ShowError("Lutfen once urun secin!");
+                ShowError("Lütfen önce ürün seçin!");
                 return;
             }
 
@@ -213,8 +213,8 @@ namespace EsnafPos.Views
             if (sender is not Button btn || btn.Tag is not EsnafPos.Models.Payment payment) return;
 
             var result = System.Windows.MessageBox.Show(
-$"{payment.PaymentType} - {payment.Amount:N2} TL odemeyi iptal etmek istiyor musunuz?\n\nUYARI: Tum urun odemeleri sifirlanacak, yeniden odeme yapmaniz gerekecek.",
-                "Odeme Iptali",
+$"{payment.PaymentType} - {payment.Amount:N2} TL ödemeyi iptal etmek istiyor musunuz?\n\nUYARI: Tüm ürün ödemeleri sıfırlanacak, yeniden ödeme yapmanız gerekecek.",
+                "Ödeme İptali",
                 System.Windows.MessageBoxButton.YesNo,
                 System.Windows.MessageBoxImage.Warning);
 

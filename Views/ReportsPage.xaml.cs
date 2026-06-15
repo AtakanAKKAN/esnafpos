@@ -68,9 +68,9 @@ namespace EsnafPos.Views
             PanelMonthlyReport.Visibility = Visibility.Collapsed;
 
             // Tum buton iceriklerini guncelle
-            SetTabButton(BtnTabDaily,   "📅  Gunluk",   tab == "daily");
-            SetTabButton(BtnTabWeekly,  "📆  Haftalik",  tab == "weekly");
-            SetTabButton(BtnTabMonthly, "🗓️  Aylik",     tab == "monthly");
+            SetTabButton(BtnTabDaily,   "📅  Günlük",   tab == "daily");
+            SetTabButton(BtnTabWeekly,  "📆  Haftalık",  tab == "weekly");
+            SetTabButton(BtnTabMonthly, "🗓️  Aylık",     tab == "monthly");
 
             // Secilen paneli goster
             switch (tab)

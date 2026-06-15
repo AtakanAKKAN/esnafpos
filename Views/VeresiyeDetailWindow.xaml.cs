@@ -140,15 +140,15 @@ namespace EsnafPos.Views
             var selectedRows = _rows.Where(r => r.SelectedQuantity > 0).ToList();
             if (!selectedRows.Any())
             {
-                MessageBox.Show("Lutfen tahsil edilecek urun secin!",
-                    "Uyari", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Lütfen tahsil edilecek ürün seçin!",
+                    "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             var selectedTotal = selectedRows.Sum(r => r.RowTotal);
             var result = MessageBox.Show(
                 $"{_card.CustomerName} — {selectedTotal:N2} TL tahsil edildi mi?",
-                "Tahsil Onayi", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                "Tahsil Onayı", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result != MessageBoxResult.Yes) return;
 

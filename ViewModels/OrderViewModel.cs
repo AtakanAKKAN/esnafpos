@@ -358,7 +358,7 @@ namespace EsnafPos.ViewModels
                 if (orderId.HasValue)
                     await RefreshOrderItemsFromApi(orderId.Value);
                 else
-                    ErrorMessage = "Urun eklenemedi. Baglanti kontrol edin.";
+                    ErrorMessage = "Ürün eklenemedi. Bağlantı kontrol edin.";
 
                 // Kanal ve kategoriyi geri yükle
                 if (SelectedChannel != savedChannel)
@@ -554,13 +554,13 @@ namespace EsnafPos.ViewModels
         public async Task<string?> MoveToTable(EsnafPos.Models.Table target)
         {
             if (CurrentOrder == null || CurrentTable == null)
-                return "Aktif siparis yok.";
+                return "Aktif sipariş yok.";
 
             // Hedef masada açık sipariş var mı?
             var existing = await _db.Orders.FirstOrDefaultAsync(o =>
                 o.TableId == target.Id && o.Status == OrderStatus.Open);
             if (existing != null)
-                return $"{target.Name} masasinda zaten acik bir siparis var!";
+                return $"{target.Name} masasında zaten açık bir sipariş var!";
 
             // Siparisi taşı
             CurrentOrder.TableId           = target.Id;
@@ -586,7 +586,7 @@ namespace EsnafPos.ViewModels
         public async Task<string?> MoveToVeresiye(string customerName)
         {
             if (CurrentOrder == null || CurrentTable == null)
-                return "Aktif siparis yok.";
+                return "Aktif sipariş yok.";
 
             var items = await _db.OrderItems
                 .Where(i => i.OrderId == CurrentOrder.Id)
@@ -596,7 +596,7 @@ namespace EsnafPos.ViewModels
                 i.Quantity - i.CollectedQuantity - i.VeresiyeQuantity > 0).ToList();
 
             if (!remaining.Any())
-                return "Masada odenecek urun yok.";
+                return "Masada ödenecek ürün yok.";
 
             foreach (var item in remaining)
             {
@@ -636,13 +636,13 @@ namespace EsnafPos.ViewModels
         public async Task<string?> MergeFromTable(EsnafPos.Models.Table source)
         {
             if (CurrentOrder == null || CurrentTable == null)
-                return "Aktif siparis yok.";
+                return "Aktif sipariş yok.";
 
             // Kaynak masanın siparişini al
             var sourceOrder = await _db.Orders
                 .FirstOrDefaultAsync(o => o.TableId == source.Id && o.Status == OrderStatus.Open);
             if (sourceOrder == null)
-                return $"{source.Name} masasinda acik siparis bulunamadi.";
+                return $"{source.Name} masasında açık sipariş bulunamadı.";
 
             var sourceItems = await _db.OrderItems
                 .Where(i => i.OrderId == sourceOrder.Id)
@@ -712,7 +712,7 @@ namespace EsnafPos.ViewModels
         {
             if (CurrentOrder == null || !OrderItems.Any())
             {
-                ErrorMessage = "Siparisde urun yok.";
+                ErrorMessage = "Siparişte ürün yok.";
                 return;
             }
             await _printer.PrintCheck(CurrentOrder, OrderItems.ToList());

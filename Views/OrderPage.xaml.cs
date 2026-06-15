@@ -330,7 +330,7 @@ namespace EsnafPos.Views
                         },
                         new TextBlock
                         {
-                            Text      = active ? "Bitti" : "Duzenle",
+                            Text      = active ? "Bitti" : "Düzenle",
                             FontSize  = 15,
                             FontWeight = FontWeights.Bold,
                             Foreground = Brushes.White,
@@ -623,7 +623,7 @@ namespace EsnafPos.Views
         {
             if (_vm.CurrentOrder == null)
             {
-                MessageBox.Show("Tasinacak siparis yok.", "Uyari",
+                MessageBox.Show("Taşınacak sipariş yok.", "Uyarı",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -658,8 +658,8 @@ namespace EsnafPos.Views
             {
                 // Mevcut veresiye müşterisine taşı
                 var result = MessageBox.Show(
-                    $"Masadaki tum urunler '{picker.SelectedVeresiyeItem.CustomerName}' musterisinin veresiyesine eklenecek.\nMasa kapanacak.\n\nDevam etmek istiyor musunuz?",
-                    "Veresiyeye Tasi",
+                    $"Masadaki tüm ürünler '{picker.SelectedVeresiyeItem.CustomerName}' müşterisinin veresiyesine eklenecek.\nMasa kapanacak.\n\nDevam etmek istiyor musunuz?",
+                    "Veresiyeye Taşı",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
                 if (result != MessageBoxResult.Yes) return;
@@ -679,7 +679,7 @@ namespace EsnafPos.Views
         {
             if (_vm.CurrentOrder == null)
             {
-                MessageBox.Show("Bu masada aktif siparis yok.", "Uyari",
+                MessageBox.Show("Bu masada aktif sipariş yok.", "Uyarı",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -697,8 +697,8 @@ namespace EsnafPos.Views
             if (sourceTable == null) return;
 
             var result = MessageBox.Show(
-                $"{sourceTable.Name} masasindaki urunler bu masaya aktarilacak.\n{sourceTable.Name} masasi bosalacak.\n\nDevam etmek istiyor musunuz?",
-                "Masa Birlestir",
+                $"{sourceTable.Name} masasındaki ürünler bu masaya aktarılacak.\n{sourceTable.Name} masası boşalacak.\n\nDevam etmek istiyor musunuz?",
+                "Masa Birleştir",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 

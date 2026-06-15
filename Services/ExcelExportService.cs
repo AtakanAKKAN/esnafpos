@@ -12,9 +12,9 @@ namespace EsnafPos.Services
             if (path == null) return;
 
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Gunluk Rapor");
+            var ws = wb.AddWorksheet("Günlük Rapor");
 
-            SetTitle(ws, $"Gunluk Rapor - {vm.SelectedDate:dd.MM.yyyy}", "A1:C1");
+            SetTitle(ws, $"Günlük Rapor - {vm.SelectedDate:dd.MM.yyyy}", "A1:C1");
 
             ws.Cell("A3").Value = "Toplam Ciro";
             ws.Cell("B3").Value = vm.DailyTotal;
@@ -22,15 +22,15 @@ namespace EsnafPos.Services
             ws.Cell("B4").Value = vm.DailyCash;
             ws.Cell("A5").Value = "Kart";
             ws.Cell("B5").Value = vm.DailyCard;
-            ws.Cell("A6").Value = "Siparis Sayisi";
+            ws.Cell("A6").Value = "Sipariş Sayısı";
             ws.Cell("B6").Value = vm.DailyOrderCount;
             StyleSummary(ws, 3, 6);
 
-            ws.Cell("A8").Value = "Urun Bazli Satislar";
+            ws.Cell("A8").Value = "Ürün Bazlı Satışlar";
             ws.Cell("A8").Style.Font.Bold = true;
             ws.Cell("A8").Style.Font.FontSize = 13;
 
-            SetHeaders(ws, 9, "Urun Adi", "Porsiyon", "Adet", "Toplam (TL)");
+            SetHeaders(ws, 9, "Ürün Adı", "Porsiyon", "Adet", "Toplam (TL)");
 
             int row = 10;
             foreach (var item in vm.DailyProductSales)
@@ -54,9 +54,9 @@ namespace EsnafPos.Services
             if (path == null) return;
 
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Haftalik Rapor");
+            var ws = wb.AddWorksheet("Haftalık Rapor");
 
-            SetTitle(ws, $"Haftalik Rapor - {vm.WeekStartDate:dd.MM.yyyy} / {vm.WeekEndDate:dd.MM.yyyy}", "A1:C1");
+            SetTitle(ws, $"Haftalık Rapor - {vm.WeekStartDate:dd.MM.yyyy} / {vm.WeekEndDate:dd.MM.yyyy}", "A1:C1");
 
             ws.Cell("A3").Value = "Toplam Ciro";
             ws.Cell("B3").Value = vm.WeeklyTotal;
@@ -64,14 +64,14 @@ namespace EsnafPos.Services
             ws.Cell("B4").Value = vm.WeeklyCash;
             ws.Cell("A5").Value = "Kart";
             ws.Cell("B5").Value = vm.WeeklyCard;
-            ws.Cell("A6").Value = "Siparis Sayisi";
+            ws.Cell("A6").Value = "Sipariş Sayısı";
             ws.Cell("B6").Value = vm.WeeklyOrderCount;
             StyleSummary(ws, 3, 6);
 
-            ws.Cell("A8").Value = "Gunluk Detay";
+            ws.Cell("A8").Value = "Günlük Detay";
             ws.Cell("A8").Style.Font.Bold = true;
 
-            SetHeaders(ws, 9, "Tarih", "Siparis Sayisi", "Ciro (TL)");
+            SetHeaders(ws, 9, "Tarih", "Sipariş Sayısı", "Ciro (TL)");
 
             int row = 10;
             foreach (var item in vm.WeeklyDetails)
@@ -98,9 +98,9 @@ namespace EsnafPos.Services
             if (path == null) return;
 
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Aylik Rapor");
+            var ws = wb.AddWorksheet("Aylık Rapor");
 
-            SetTitle(ws, $"Aylik Rapor - {monthName} {vm.SelectedYear}", "A1:C1");
+            SetTitle(ws, $"Aylık Rapor - {monthName} {vm.SelectedYear}", "A1:C1");
 
             ws.Cell("A3").Value = "Toplam Ciro";
             ws.Cell("B3").Value = vm.MonthlyTotal;
@@ -108,14 +108,14 @@ namespace EsnafPos.Services
             ws.Cell("B4").Value = vm.MonthlyCash;
             ws.Cell("A5").Value = "Kart";
             ws.Cell("B5").Value = vm.MonthlyCard;
-            ws.Cell("A6").Value = "Siparis Sayisi";
+            ws.Cell("A6").Value = "Sipariş Sayısı";
             ws.Cell("B6").Value = vm.MonthlyOrderCount;
             StyleSummary(ws, 3, 6);
 
-            ws.Cell("A8").Value = "Gunluk Detay";
+            ws.Cell("A8").Value = "Günlük Detay";
             ws.Cell("A8").Style.Font.Bold = true;
 
-            SetHeaders(ws, 9, "Tarih", "Siparis Sayisi", "Ciro (TL)");
+            SetHeaders(ws, 9, "Tarih", "Sipariş Sayısı", "Ciro (TL)");
 
             int row = 10;
             foreach (var item in vm.MonthlyDetails)

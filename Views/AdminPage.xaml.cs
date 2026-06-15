@@ -79,7 +79,7 @@ namespace EsnafPos.Views
             var dbTabs = new[] { "masalar", "urunler", "kullanicilar", "kanallar", "veresiye" };
             if (isClient && dbTabs.Contains(tab))
             {
-                ShowToast("Bu sekme sadece Sunucu veya Tek Bilgisayar modunda kullanilabilir.", success: false);
+                ShowToast("Bu sekme sadece Sunucu veya Tek Bilgisayar modunda kullanılabilir.", success: false);
                 return;
             }
 
@@ -107,21 +107,21 @@ namespace EsnafPos.Views
                     PanelMasalar.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavMasalar, true);
                     TxtPageTitle.Text    = "Masalar";
-                    TxtPageSubtitle.Text = "Masa ekle, sil ve sirala";
+                    TxtPageSubtitle.Text = "Masa ekle, sil ve sırala";
                     break;
                 case "urunler":
                     PanelUrunler.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavUrunler, true);
-                    TxtPageTitle.Text    = "Urunler";
-                    TxtPageSubtitle.Text = "Kategori ve urun yonetimi";
+                    TxtPageTitle.Text    = "Ürünler";
+                    TxtPageSubtitle.Text = "Kategori ve ürün yönetimi";
                     RefreshChannelFilter();
                     ApplyChannelFilter(_activeChannelFilter);
                     break;
                 case "kullanicilar":
                     PanelKullanicilar.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavKullanicilar, true);
-                    TxtPageTitle.Text    = "Kullanicilar";
-                    TxtPageSubtitle.Text = "Kasiyer ve yonetici hesaplari";
+                    TxtPageTitle.Text    = "Kullanıcılar";
+                    TxtPageSubtitle.Text = "Kasiyer ve yönetici hesapları";
                     // Rol ComboBox'ı doldur
                     if (CbNewUserRole.Items.Count == 0)
                     {
@@ -134,34 +134,34 @@ namespace EsnafPos.Views
                     PanelKanallar.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavKanallar, true);
                     TxtPageTitle.Text    = "Kanallar";
-                    TxtPageSubtitle.Text = "Siparis kanali ekle, sil, sirala";
+                    TxtPageSubtitle.Text = "Sipariş kanalı ekle, sil, sırala";
                     break;
                 case "veresiye":
                     PanelVeresiyeAdmin.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavVeresiye, true);
                     TxtPageTitle.Text    = "Veresiye";
-                    TxtPageSubtitle.Text = "Aktif veresiye kayitlari";
+                    TxtPageSubtitle.Text = "Aktif veresiye kayıtları";
                     _ = _vm.LoadVeresiyeCommand.ExecuteAsync(null);
                     break;
                 case "isletme":
                     PanelIsletme.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavIsletme, true);
-                    TxtPageTitle.Text    = "Isletme Ayarlari";
-                    TxtPageSubtitle.Text = "Uygulama adi, fis bilgileri";
+                    TxtPageTitle.Text    = "İşletme Ayarları";
+                    TxtPageSubtitle.Text = "Uygulama adı, fiş bilgileri";
                     LoadBusinessSettings();
                     break;
                 case "ag":
                     PanelAg.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavAg, true);
-                    TxtPageTitle.Text    = "Ag Ayarlari";
+                    TxtPageTitle.Text    = "Ağ Ayarları";
                     TxtPageSubtitle.Text = "Sunucu ve istemci modu";
                     LoadNetworkSettings();
                     break;
                 case "yazici":
                     PanelYazici.Visibility = Visibility.Visible;
                     SetNavStyle(BtnNavYazici, true);
-                    TxtPageTitle.Text    = "Yazici";
-                    TxtPageSubtitle.Text = "USB veya ag yazici baglantisi";
+                    TxtPageTitle.Text    = "Yazıcı";
+                    TxtPageSubtitle.Text = "USB veya ağ yazıcı bağlantısı";
                     LoadPrinterSettings();
                     break;
             }
@@ -218,7 +218,7 @@ namespace EsnafPos.Views
         private async void BtnSaveEditTable_Click(object sender, RoutedEventArgs e)
         {
             await _vm.SaveEditTableCommand.ExecuteAsync(null);
-            ShowToast("Masa guncellendi");
+            ShowToast("Masa güncellendi");
         }
 
         private async void BtnDeleteTable_Click(object sender, RoutedEventArgs e)
@@ -309,7 +309,7 @@ namespace EsnafPos.Views
         {
             if (string.IsNullOrEmpty(_activeChannelFilter))
             {
-                ShowToast("Oncelikle Kanallar sekmesinden bir kanal ekleyin.", success: false);
+                ShowToast("Öncelikle Kanallar sekmesinden bir kanal ekleyin.", success: false);
                 return;
             }
             _vm.NewCategoryName    = TxtNewCategoryName.Text;
@@ -331,13 +331,13 @@ namespace EsnafPos.Views
             _vm.EditCategoryName    = dialog.CategoryName;
             _vm.EditCategoryChannel = dialog.Channel;
             await _vm.SaveEditCategoryCommand.ExecuteAsync(null);
-            ShowToast("Kategori guncellendi");
+            ShowToast("Kategori güncellendi");
         }
 
         private async void BtnDeleteCategory_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button btn || btn.Tag is not Category c) return;
-            var r = MessageBox.Show($"'{c.Name}' ve tum urunleri silinecek!", "Sil",
+            var r = MessageBox.Show($"'{c.Name}' ve tüm ürünleri silinecek!", "Sil",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (r != MessageBoxResult.Yes) return;
             await _vm.DeleteCategoryCommand.ExecuteAsync(c);
@@ -358,7 +358,7 @@ namespace EsnafPos.Views
             _vm.EditProductPriceAz    = dialog.PriceAz;
             _vm.EditProductPriceBucuk = dialog.PriceBucuk;
             await _vm.SaveEditProductCommand.ExecuteAsync(null);
-            ShowToast("Urun guncellendi");
+            ShowToast("Ürün güncellendi");
         }
 
         // Ürün ekle — EditProductDialog boş ürünle açılır
@@ -370,7 +370,7 @@ namespace EsnafPos.Views
             var dialog = new EditProductDialog(emptyProduct)
             {
                 Owner = Window.GetWindow(this),
-                Title = "Yeni Urun Ekle"
+                Title = "Yeni Ürün Ekle"
             };
             if (dialog.ShowDialog() != true) return;
 
@@ -381,7 +381,7 @@ namespace EsnafPos.Views
             _vm.NewProductPriceAz      = dialog.PriceAz;
             _vm.NewProductPriceBucuk   = dialog.PriceBucuk;
             await _vm.AddProductCommand.ExecuteAsync(null);
-            ShowToast("Urun eklendi");
+            ShowToast("Ürün eklendi");
         }
 
         private async void BtnDeleteProduct_Click(object sender, RoutedEventArgs e)
@@ -391,7 +391,7 @@ namespace EsnafPos.Views
                 MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (r != MessageBoxResult.Yes) return;
             await _vm.DeleteProductCommand.ExecuteAsync(p);
-            ShowToast("Urun silindi");
+            ShowToast("Ürün silindi");
         }
 
         private async void BtnMoveCategoryUp_Click(object sender, RoutedEventArgs e)
@@ -419,7 +419,7 @@ namespace EsnafPos.Views
             _vm.EditUserPin = PbEditPin.Password;
             await _vm.SaveEditUserCommand.ExecuteAsync(null);
             PbEditPin.Password = "";
-            ShowToast("Kullanici guncellendi");
+            ShowToast("Kullanıcı güncellendi");
         }
 
         private async void BtnAddUser_Click(object sender, RoutedEventArgs e)
@@ -430,7 +430,7 @@ namespace EsnafPos.Views
             await _vm.AddUserCommand.ExecuteAsync(null);
             TxtNewUserName.Text = "";
             PbNewPin.Password   = "";
-            ShowToast("Kullanici eklendi");
+            ShowToast("Kullanıcı eklendi");
         }
 
         private async void BtnDeleteUser_Click(object sender, RoutedEventArgs e)
@@ -440,7 +440,7 @@ namespace EsnafPos.Views
                 MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (r != MessageBoxResult.Yes) return;
             await _vm.DeleteUserCommand.ExecuteAsync(u);
-            ShowToast("Kullanici silindi");
+            ShowToast("Kullanıcı silindi");
         }
 
         // ─── VERESİYE ─────────────────────────────────────────────
@@ -456,15 +456,15 @@ namespace EsnafPos.Views
         {
             await _vm.SaveVeresiyeNameCommand.ExecuteAsync(null);
             PanelEditVeresiye.Visibility = Visibility.Collapsed;
-            ShowToast("Musteri adi guncellendi");
+            ShowToast("Müşteri adı güncellendi");
         }
 
         private async void BtnDeleteVeresiye_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button btn || btn.Tag is not VeresiyeAdminEntry entry) return;
             var r = MessageBox.Show(
-                $"{entry.CustomerName} adli musterinin {entry.Amount:N2} TL veresiyesi iptal edilecek.",
-                "Veresiye Iptal", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                $"{entry.CustomerName} adlı müşterinin {entry.Amount:N2} TL veresiyesi iptal edilecek.",
+                "Veresiye İptal", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (r != MessageBoxResult.Yes) return;
             await _vm.DeleteVeresiyeEntryCommand.ExecuteAsync(entry);
             ShowToast("Veresiye iptal edildi");
@@ -558,11 +558,11 @@ namespace EsnafPos.Views
                 TxtIconPath.Text = System.IO.Path.GetFileName(dialog.FileName);
                 var window = Window.GetWindow(this);
                 if (window != null) window.Icon = bitmap;
-                ShowToast("Ikon guncellendi! Bir sonraki acilista da gecerli olacak.");
+                ShowToast("İkon güncellendi! Bir sonraki açılışta da geçerli olacak.");
             }
             catch (Exception ex)
             {
-                ShowToast($"Ikon yuklenemedi: {ex.Message}", success: false);
+                ShowToast($"İkon yüklenemedi: {ex.Message}", success: false);
             }
         }
 
@@ -574,7 +574,7 @@ namespace EsnafPos.Views
             _settings.Business.Phone        = TxtBusinessPhone.Text.Trim();
             _settings.Business.ReceiptNote  = TxtReceiptNote.Text.Trim();
             _settings.Save();
-            ShowToast("Isletme ayarlari kaydedildi! Uygulamayi yeniden baslatın.");
+            ShowToast("İşletme ayarları kaydedildi! Uygulamayı yeniden başlatın.");
         }
 
         // ─── AĞ AYARLARI ──────────────────────────────────────────
@@ -632,7 +632,7 @@ namespace EsnafPos.Views
             net.ApiUsername = TxtApiUsername.Text.Trim();
             net.ApiPassword = TxtApiPassword.Password;
             _settings.Save();
-            ShowToast("Ag ayarlari kaydedildi. Uygulamayi yeniden baslatın.");
+            ShowToast("Ağ ayarları kaydedildi. Uygulamayı yeniden başlatın.");
         }
 
         private async void BtnTestConnection_Click(object sender, RoutedEventArgs e)
@@ -685,7 +685,7 @@ namespace EsnafPos.Views
         private async void BtnSaveEditChannel_Click(object sender, RoutedEventArgs e)
         {
             await _vm.SaveEditChannelCommand.ExecuteAsync(null);
-            ShowToast("Kanal guncellendi");
+            ShowToast("Kanal güncellendi");
         }
 
         private async void BtnDeleteChannel_Click(object sender, RoutedEventArgs e)
@@ -742,13 +742,13 @@ namespace EsnafPos.Views
             if (int.TryParse(TxtLanPort.Text, out var lp))
                 _settings.Printer.LanPort = lp;
             _settings.Save();
-            ShowToast("Yazici ayarlari kaydedildi");
+            ShowToast("Yazıcı ayarları kaydedildi");
         }
 
         private async void BtnTestPrint_Click(object sender, RoutedEventArgs e)
         {
             await _vm.TestPrintCommand.ExecuteAsync(null);
-            ShowToast("Test baskisi gonderildi");
+            ShowToast("Test baskısı gönderildi");
         }
     }
 }

@@ -91,8 +91,8 @@ namespace EsnafPos
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show(
-                "Cikis yapmak istediginizden emin misiniz?",
-                "Cikis",
+                "Çıkış yapmak istediğinizden emin misiniz?",
+                "Çıkış",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 

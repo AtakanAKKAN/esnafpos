@@ -36,13 +36,13 @@ namespace EsnafPos.Views
 
             if (mode == TablePickerMode.Move)
             {
-                TxtTitle.Text    = "Masayi Tasi";
-                TxtSubtitle.Text = $"{currentTable.Name} masasindaki siparisi tasimak istediginiz\nBOS masayi veya mevcut VERESİYE musterisini secin.";
+                TxtTitle.Text    = "Masayı Taşı";
+                TxtSubtitle.Text = $"{currentTable.Name} masasındaki siparişi taşımak istediğiniz\nBOŞ masayı veya mevcut VERESİYE müşterisini seçin.";
             }
             else
             {
-                TxtTitle.Text    = "Masa Birlestir";
-                TxtSubtitle.Text = $"Hangi masanin urunlerini {currentTable.Name} masasina aktarmak istiyorsunuz?";
+                TxtTitle.Text    = "Masa Birleştir";
+                TxtSubtitle.Text = $"Hangi masanın ürünlerini {currentTable.Name} masasına aktarmak istiyorsunuz?";
             }
 
             Loaded += async (s, e) =>
@@ -80,7 +80,7 @@ namespace EsnafPos.Views
                         items.Add(v);
 
                     if (!items.Any())
-                        TxtSubtitle.Text += "\n\nUygun bos masa veya veresiye bulunamadi.";
+                        TxtSubtitle.Text += "\n\nUygun boş masa veya veresiye bulunamadı.";
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace EsnafPos.Views
                     }
 
                     if (!items.Any())
-                        TxtSubtitle.Text += "\n\nBirlesitirilecek aktif masa bulunamadi.";
+                        TxtSubtitle.Text += "\n\nBirleştirilecek aktif masa bulunamadı.";
                 }
 
                 IcItems.ItemsSource = items;

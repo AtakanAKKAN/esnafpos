@@ -350,7 +350,7 @@ namespace EsnafPos.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Odeme hatasi: {ex.Message}";
+                ErrorMessage = $"Ödeme hatası: {ex.Message}";
             }
             finally
             {

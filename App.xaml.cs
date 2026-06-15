@@ -219,8 +219,8 @@ namespace EsnafPos
                             await System.IO.File.WriteAllTextAsync(logPath,
                                 $"{DateTime.Now}: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
                             Current.Dispatcher.Invoke(() =>
-                                MessageBox.Show($"API Sunucu baslanamadi:\n{ex.Message}",
-                                    "Sunucu Hatasi", MessageBoxButton.OK, MessageBoxImage.Error));
+                                MessageBox.Show($"API Sunucu başlatılamadı:\n{ex.Message}",
+                                    "Sunucu Hatası", MessageBoxButton.OK, MessageBoxImage.Error));
                         }
                     });
                 }
