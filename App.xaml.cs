@@ -207,6 +207,8 @@ namespace EsnafPos
                     Server = new ApiServer(net.ApiUsername, net.ApiPassword, dbPath);
                     _ = Task.Run(async () =>
                     {
+                        // Gelen istemci bağlantıları için firewall kuralını garantiye al
+                        FirewallService.EnsureServerRule(net.ServerPort);
                         try { await Server.StartAsync(net.ServerPort); }
                         catch (Exception ex)
                         {
