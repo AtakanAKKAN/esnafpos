@@ -56,7 +56,7 @@
                             Style="{StaticResource DarkButton}"
                             Visibility="Collapsed"
                             Click="BtnAdmin_Click">
-                        <TextBlock Text="Yonetim" FontSize="17"
+                        <TextBlock Text="Yönetim" FontSize="17"
                                    Foreground="White" FontWeight="SemiBold"/>
                     </Button>
 
@@ -76,7 +76,7 @@
                     <Button Height="42" Padding="20,0"
                             Style="{StaticResource DangerButton}"
                             Click="BtnLogout_Click">
-                        <TextBlock Text="Cikis" FontSize="17"
+                        <TextBlock Text="Çıkış" FontSize="17"
                                    Foreground="White" FontWeight="SemiBold"/>
                     </Button>
                 </StackPanel>

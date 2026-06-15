@@ -14,7 +14,7 @@
             <TextBlock x:Name="TxtAppName"
                        Text="Ciko POS" FontSize="38" FontWeight="Bold"
                        Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,8"/>
-            <TextBlock Text="Kullanici secin" FontSize="18"
+            <TextBlock Text="Kullanıcı seçin" FontSize="18"
                        Foreground="#8899AA" HorizontalAlignment="Center" Margin="0,0,0,56"/>
 
             <!-- Kullanici Kartlari -->
@@ -147,7 +147,7 @@
                                 Click="BtnLogin_Click"/>
                     </Grid>
 
-                    <Button Content="← Kullanici Sec"
+                    <Button Content="← Kullanıcı Seç"
                             Background="Transparent" BorderThickness="0"
                             Foreground="#8899AA" FontSize="14"
                             HorizontalAlignment="Center" Cursor="Hand"

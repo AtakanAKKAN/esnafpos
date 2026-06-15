@@ -31,18 +31,18 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Background="#243342" Padding="20,18">
-                    <TextBlock Text="Yonetim Paneli" FontSize="15" FontWeight="Bold"
+                    <TextBlock Text="Yönetim Paneli" FontSize="15" FontWeight="Bold"
                                Foreground="White" TextWrapping="Wrap"/>
                 </Border>
                 <StackPanel Grid.Row="1" Margin="0,8,0,0">
                     <Button x:Name="BtnNavMasalar"     Click="BtnNav_Click" Tag="masalar"     Style="{StaticResource NavBtn}"><TextBlock Text="Masalar"          Style="{StaticResource NavBtnText}"/></Button>
-                    <Button x:Name="BtnNavUrunler"     Click="BtnNav_Click" Tag="urunler"     Style="{StaticResource NavBtn}"><TextBlock Text="Urunler"          Style="{StaticResource NavBtnText}"/></Button>
-                    <Button x:Name="BtnNavKullanicilar" Click="BtnNav_Click" Tag="kullanicilar" Style="{StaticResource NavBtn}"><TextBlock Text="Kullanicilar"    Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavUrunler"     Click="BtnNav_Click" Tag="urunler"     Style="{StaticResource NavBtn}"><TextBlock Text="Ürünler"          Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavKullanicilar" Click="BtnNav_Click" Tag="kullanicilar" Style="{StaticResource NavBtn}"><TextBlock Text="Kullanıcılar"    Style="{StaticResource NavBtnText}"/></Button>
                     <Button x:Name="BtnNavKanallar"    Click="BtnNav_Click" Tag="kanallar"    Style="{StaticResource NavBtn}"><TextBlock Text="Kanallar"         Style="{StaticResource NavBtnText}"/></Button>
                     <Button x:Name="BtnNavVeresiye"    Click="BtnNav_Click" Tag="veresiye"    Style="{StaticResource NavBtn}"><TextBlock Text="Veresiye"         Style="{StaticResource NavBtnText}"/></Button>
-                    <Button x:Name="BtnNavIsletme"     Click="BtnNav_Click" Tag="isletme"     Style="{StaticResource NavBtn}"><TextBlock Text="Isletme Ayarlari" Style="{StaticResource NavBtnText}"/></Button>
-                    <Button x:Name="BtnNavAg"          Click="BtnNav_Click" Tag="ag"          Style="{StaticResource NavBtn}"><TextBlock Text="Ag Ayarlari"      Style="{StaticResource NavBtnText}"/></Button>
-                    <Button x:Name="BtnNavYazici"      Click="BtnNav_Click" Tag="yazici"      Style="{StaticResource NavBtn}"><TextBlock Text="Yazici"           Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavIsletme"     Click="BtnNav_Click" Tag="isletme"     Style="{StaticResource NavBtn}"><TextBlock Text="İşletme Ayarları" Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavAg"          Click="BtnNav_Click" Tag="ag"          Style="{StaticResource NavBtn}"><TextBlock Text="Ağ Ayarları"      Style="{StaticResource NavBtnText}"/></Button>
+                    <Button x:Name="BtnNavYazici"      Click="BtnNav_Click" Tag="yazici"      Style="{StaticResource NavBtn}"><TextBlock Text="Yazıcı"           Style="{StaticResource NavBtnText}"/></Button>
                 </StackPanel>
                 <TextBlock Grid.Row="2" Text="v2.0" FontSize="11" Foreground="#4A6480"
                            HorizontalAlignment="Center" Margin="0,0,0,14"/>
@@ -82,7 +82,7 @@
                                     </EventTrigger>
                                 </Border.Triggers>
                             </Border>
-                            <TextBlock Text="Yukleniyor..." FontSize="13" Foreground="#95A5A6" VerticalAlignment="Center"/>
+                            <TextBlock Text="Yükleniyor..." FontSize="13" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -106,7 +106,7 @@
                                 <Border x:Name="PanelEditTable" Background="#EBF5FB" CornerRadius="10" Padding="16,12"
                                         Margin="0,16,0,0" Visibility="Collapsed">
                                     <StackPanel>
-                                        <TextBlock Text="Masa Adini Duzenle" FontSize="13" FontWeight="SemiBold"
+                                        <TextBlock Text="Masa Adını Düzenle" FontSize="13" FontWeight="SemiBold"
                                                    Foreground="#2C3E50" Margin="0,0,0,10"/>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBox x:Name="TxtEditTableName" Width="240" Height="40" FontSize="14"
@@ -118,7 +118,7 @@
                                             </Button>
                                             <Button Style="{StaticResource SecondaryButton}" Height="40" Padding="14,0"
                                                     Command="{Binding CancelEditTableCommand}">
-                                                <TextBlock Text="Iptal" Foreground="White"/>
+                                                <TextBlock Text="İptal" Foreground="White"/>
                                             </Button>
                                         </StackPanel>
                                     </StackPanel>
@@ -153,7 +153,7 @@
                                                     <Button Height="36" Padding="16,0" Margin="0,0,8,0"
                                                             Style="{StaticResource SecondaryButton}"
                                                             Tag="{Binding}" Click="BtnStartEditTable_Click">
-                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="13"/>
+                                                        <TextBlock Text="Düzenle" Foreground="White" FontSize="13"/>
                                                     </Button>
                                                     <Button Height="36" Padding="14,0"
                                                             Style="{StaticResource DangerButton}"
@@ -179,7 +179,7 @@
                                            Foreground="#2C3E50" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <StackPanel x:Name="SpChannelFilter" Orientation="Horizontal"/>
                                 <TextBlock x:Name="TxtNoChannels"
-                                           Text="Kanal bulunamadi. Kanallar sekmesinden ekleyin."
+                                           Text="Kanal bulunamadı. Kanallar sekmesinden ekleyin."
                                            FontSize="12" Foreground="#E74C3C"
                                            VerticalAlignment="Center" Visibility="Collapsed"/>
                             </StackPanel>
@@ -238,12 +238,12 @@
                                                         <Button Height="34" Padding="14,0" Margin="0,0,8,0"
                                                                 Style="{StaticResource SecondaryButton}"
                                                                 Tag="{Binding}" Click="BtnStartEditCategory_Click">
-                                                            <TextBlock Text="Duzenle" Foreground="White" FontSize="12"/>
+                                                            <TextBlock Text="Düzenle" Foreground="White" FontSize="12"/>
                                                         </Button>
                                                         <Button Height="34" Padding="14,0" Margin="0,0,8,0"
                                                                 Style="{StaticResource PrimaryButton}"
                                                                 Tag="{Binding}" Click="BtnAddProduct_Click">
-                                                            <TextBlock Text="+ Urun Ekle" Foreground="White" FontSize="12"/>
+                                                            <TextBlock Text="+ Ürün Ekle" Foreground="White" FontSize="12"/>
                                                         </Button>
                                                         <Button Height="34" Padding="12,0"
                                                                 Style="{StaticResource DangerButton}"
@@ -273,7 +273,7 @@
                                                                     <Button Height="32" Padding="12,0" Margin="0,0,6,0"
                                                                             Style="{StaticResource SecondaryButton}"
                                                                             Tag="{Binding}" Click="BtnStartEditProduct_Click">
-                                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="12"/>
+                                                                        <TextBlock Text="Düzenle" Foreground="White" FontSize="12"/>
                                                                     </Button>
                                                                     <Button Height="32" Padding="10,0"
                                                                             Style="{StaticResource DangerButton}"
@@ -299,7 +299,7 @@
                         <Border x:Name="PanelEditUser" Background="#EBF5FB" CornerRadius="12" Padding="20,16"
                                 Margin="0,0,0,16" Visibility="Collapsed">
                             <StackPanel>
-                                <TextBlock Text="Kullanici Duzenle" FontSize="15" FontWeight="Bold"
+                                <TextBlock Text="Kullanıcı Düzenle" FontSize="15" FontWeight="Bold"
                                            Foreground="#2C3E50" Margin="0,0,0,12"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox Width="200" Height="42" FontSize="14" Margin="0,0,12,0"
@@ -311,7 +311,7 @@
                                     </Button>
                                     <Button Style="{StaticResource SecondaryButton}" Height="42" Padding="14,0"
                                             Command="{Binding CancelEditUserCommand}">
-                                        <TextBlock Text="Iptal" Foreground="White"/>
+                                        <TextBlock Text="İptal" Foreground="White"/>
                                     </Button>
                                 </StackPanel>
                             </StackPanel>
@@ -334,7 +334,7 @@
                                                     <Button Height="36" Padding="14,0" Margin="0,0,8,0"
                                                             Style="{StaticResource SecondaryButton}"
                                                             Tag="{Binding}" Click="BtnStartEditUser_Click">
-                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="13"/>
+                                                        <TextBlock Text="Düzenle" Foreground="White" FontSize="13"/>
                                                     </Button>
                                                     <Button Height="36" Padding="12,0"
                                                             Style="{StaticResource DangerButton}"
@@ -350,7 +350,7 @@
                         </Border>
                         <Border Background="White" CornerRadius="12" Padding="20,16">
                             <StackPanel>
-                                <TextBlock Text="Yeni Kullanici Ekle" FontSize="15" FontWeight="Bold"
+                                <TextBlock Text="Yeni Kullanıcı Ekle" FontSize="15" FontWeight="Bold"
                                            Foreground="#2C3E50" Margin="0,0,0,14"/>
                                 <Grid Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
@@ -366,12 +366,12 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <!-- Etiketler -->
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Kullanici Adi"
-                                               FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Sifre (min 4 karakter)"
-                                               FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Kullanıcı Adı"
+                                               FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SubtleTextBrush}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Şifre (min 4 karakter)"
+                                               FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SubtleTextBrush}"/>
                                     <TextBlock Grid.Row="0" Grid.Column="4" Text="Rol"
-                                               FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D"/>
+                                               FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SubtleTextBrush}"/>
                                     <!-- Inputlar -->
                                     <TextBox Grid.Row="2" Grid.Column="0"
                                              x:Name="TxtNewUserName" Height="42" FontSize="14"
@@ -383,7 +383,7 @@
                                 </Grid>
                                 <Button Style="{StaticResource PrimaryButton}" Height="44" Padding="24,0"
                                         HorizontalAlignment="Left" Click="BtnAddUser_Click">
-                                    <TextBlock Text="Kullanici Ekle" Foreground="White" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Kullanıcı Ekle" Foreground="White" FontWeight="SemiBold"/>
                                 </Button>
                             </StackPanel>
                         </Border>
@@ -396,7 +396,7 @@
                         <Border x:Name="PanelEditChannel" Background="#EBF5FB" CornerRadius="12"
                                 Padding="20,16" Margin="0,0,0,12" Visibility="Collapsed">
                             <StackPanel>
-                                <TextBlock Text="Kanal Duzenle" FontSize="15" FontWeight="Bold"
+                                <TextBlock Text="Kanal Düzenle" FontSize="15" FontWeight="Bold"
                                            Foreground="#2C3E50" Margin="0,0,0,12"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox x:Name="TxtEditChannelName" Width="240" Height="42" FontSize="14"
@@ -409,7 +409,7 @@
                                     </Button>
                                     <Button Style="{StaticResource SecondaryButton}" Height="42" Padding="14,0"
                                             Command="{Binding CancelEditChannelCommand}">
-                                        <TextBlock Text="Iptal" Foreground="White"/>
+                                        <TextBlock Text="İptal" Foreground="White"/>
                                     </Button>
                                 </StackPanel>
                             </StackPanel>
@@ -420,8 +420,8 @@
                             <StackPanel>
                                 <TextBlock Text="Yeni Kanal Ekle" FontSize="15" FontWeight="Bold"
                                            Foreground="#2C3E50" Margin="0,0,0,14"/>
-                                <TextBlock Text="Kanallar; kategorilerin hangi siparis modunda gorundugunu belirler. (Masa, Kurye, Trendyol vb.)"
-                                           FontSize="12" Foreground="#95A5A6" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                <TextBlock Text="Kanallar; kategorilerin hangi sipariş modunda göründüğünü belirler. (Masa, Kurye, Trendyol vb.)"
+                                           FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,0,0,12" TextWrapping="Wrap"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox x:Name="TxtNewChannelName" Width="260" Height="42" FontSize="14"
                                              Margin="0,0,10,0" KeyDown="TxtEnter_AddChannel"
@@ -461,7 +461,7 @@
                                                     <Button Height="34" Padding="14,0" Margin="0,0,8,0"
                                                             Style="{StaticResource SecondaryButton}"
                                                             Tag="{Binding}" Click="BtnStartEditChannel_Click">
-                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="12"/>
+                                                        <TextBlock Text="Düzenle" Foreground="White" FontSize="12"/>
                                                     </Button>
                                                     <Button Height="34" Padding="12,0"
                                                             Style="{StaticResource DangerButton}"
@@ -483,7 +483,7 @@
                         <Border x:Name="PanelEditVeresiye" Background="#EBF5FB" CornerRadius="12" Padding="20,16"
                                 Margin="0,0,0,12" Visibility="Collapsed">
                             <StackPanel>
-                                <TextBlock Text="Musteri Adini Duzenle" FontSize="15" FontWeight="Bold"
+                                <TextBlock Text="Müşteri Adını Düzenle" FontSize="15" FontWeight="Bold"
                                            Foreground="#2C3E50" Margin="0,0,0,12"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox Width="260" Height="42" FontSize="14" Margin="0,0,12,0"
@@ -494,7 +494,7 @@
                                     </Button>
                                     <Button Style="{StaticResource SecondaryButton}" Height="42" Padding="16,0"
                                             Command="{Binding CancelEditVeresiyeCommand}">
-                                        <TextBlock Text="Iptal" Foreground="White"/>
+                                        <TextBlock Text="İptal" Foreground="White"/>
                                     </Button>
                                 </StackPanel>
                             </StackPanel>
@@ -531,12 +531,12 @@
                                                     <Button Height="36" Padding="14,0" Margin="0,0,8,0"
                                                             Style="{StaticResource SecondaryButton}"
                                                             Tag="{Binding}" Click="BtnEditVeresiye_Click">
-                                                        <TextBlock Text="Duzenle" Foreground="White" FontSize="13"/>
+                                                        <TextBlock Text="Düzenle" Foreground="White" FontSize="13"/>
                                                     </Button>
                                                     <Button Height="36" Padding="14,0"
                                                             Style="{StaticResource DangerButton}"
                                                             Tag="{Binding}" Click="BtnDeleteVeresiye_Click">
-                                                        <TextBlock Text="Iptal Et" Foreground="White" FontSize="13"/>
+                                                        <TextBlock Text="İptal Et" Foreground="White" FontSize="13"/>
                                                     </Button>
                                                 </StackPanel>
                                             </Grid>
@@ -552,22 +552,22 @@
                         <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="580"
                                 HorizontalAlignment="Left" Margin="0,0,0,16">
                             <StackPanel>
-                                <TextBlock Text="Uygulama ve Isletme Bilgileri" FontSize="16" FontWeight="Bold"
+                                <TextBlock Text="Uygulama ve İşletme Bilgileri" FontSize="16" FontWeight="Bold"
                                            Foreground="#2C3E50" Margin="0,0,0,20"/>
-                                <TextBlock Text="Uygulama Adi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="Uygulama Adı" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtAppName" Height="44" FontSize="15" Margin="0,0,0,16"/>
-                                <TextBlock Text="Isletme Adi (fiste cikacak)" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="İşletme Adı (fişte çıkacak)" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtBusinessName" Height="44" FontSize="15" Margin="0,0,0,16"/>
                                 <TextBlock Text="Adres" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtBusinessAddress" Height="44" FontSize="15" Margin="0,0,0,16"/>
                                 <TextBlock Text="Telefon" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtBusinessPhone" Height="44" FontSize="15" Margin="0,0,0,16"/>
-                                <TextBlock Text="Fis Alt Notu (tesekkuler, bekleyiniz vb.)" FontSize="14"
+                                <TextBlock Text="Fiş Alt Notu (teşekkürler, bekleyiniz vb.)" FontSize="14"
                                            FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtReceiptNote" Height="44" FontSize="15" Margin="0,0,0,24"/>
                                 <Button Style="{StaticResource PrimaryButton}" Height="48" FontSize="15"
                                         Padding="28,0" HorizontalAlignment="Left" Click="BtnSaveBusinessSettings_Click">
-                                    <TextBlock Text="Ayarlari Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Ayarları Kaydet" Foreground="White" FontWeight="SemiBold"/>
                                 </Button>
                             </StackPanel>
                         </Border>
@@ -590,9 +590,9 @@
                         </Border>
                         <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="580" HorizontalAlignment="Left">
                             <StackPanel>
-                                <TextBlock Text="Uygulama Ikonu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,8"/>
-                                <TextBlock Text="Pencere ikonu degistirilir. (Gorev cubugu ikonu sabittir)"
-                                           FontSize="12" Foreground="#95A5A6" Margin="0,0,0,16"/>
+                                <TextBlock Text="Uygulama İkonu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,8"/>
+                                <TextBlock Text="Pencere ikonu değiştirilir. (Görev çubuğu ikonu sabittir)"
+                                           FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,0,0,16"/>
                                 <StackPanel Orientation="Horizontal">
                                     <Border x:Name="BorderIconPreview" Width="64" Height="64" CornerRadius="12"
                                             Background="#F0F4F8" Margin="0,0,16,0">
@@ -601,7 +601,7 @@
                                     <StackPanel VerticalAlignment="Center">
                                         <Button Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0"
                                                 HorizontalAlignment="Left" Click="BtnSelectIcon_Click">
-                                            <TextBlock Text="Ikon Sec..." Foreground="White"/>
+                                            <TextBlock Text="İkon Seç..." Foreground="White"/>
                                         </Button>
                                         <TextBlock x:Name="TxtIconPath" FontSize="11" Foreground="#95A5A6"
                                                    Margin="0,6,0,0" TextTrimming="CharacterEllipsis" MaxWidth="200"/>
@@ -615,7 +615,7 @@
                     <StackPanel x:Name="PanelAg" Visibility="Collapsed">
                         <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="520" HorizontalAlignment="Left">
                             <StackPanel>
-                                <TextBlock Text="Ag Modu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                                <TextBlock Text="Ağ Modu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
                                     <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
                                         <StackPanel Orientation="Horizontal">
@@ -637,7 +637,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <RadioButton x:Name="RbClient" GroupName="AppMode"
                                                          Checked="AppMode_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Istemci" FontSize="14" FontWeight="SemiBold"
+                                            <TextBlock Text="İstemci" FontSize="14" FontWeight="SemiBold"
                                                        Foreground="#2C3E50" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
@@ -646,43 +646,43 @@
                                 <Border x:Name="PanelServerInfo" Visibility="Collapsed"
                                         Background="#E8F5E9" CornerRadius="10" Padding="16,12" Margin="0,0,0,20">
                                     <StackPanel>
-                                        <TextBlock Text="Istemci bilgisayara bunu yazin:"
+                                        <TextBlock Text="İstemci bilgisayara bunu yazın:"
                                                    FontSize="13" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                         <TextBlock x:Name="TxtServerName" FontSize="18" FontWeight="Bold" Foreground="#27AE60"/>
-                                        <TextBlock x:Name="TxtServerIps" FontSize="12" Foreground="#7F8C8D"
+                                        <TextBlock x:Name="TxtServerIps" FontSize="13" Foreground="{StaticResource SubtleTextBrush}"
                                                    Margin="0,4,0,0" TextWrapping="Wrap"/>
-                                        <TextBlock Text="Bilgisayar adi IP degisse bile sabit kalir - adi yazmaniz onerilir."
-                                                   FontSize="11" Foreground="#7F8C8D" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Bilgisayar adı IP değişse bile sabit kalır — adı yazmanız önerilir."
+                                                   FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,6,0,0" TextWrapping="Wrap"/>
                                     </StackPanel>
                                 </Border>
                                 <TextBlock Text="Sunucu Port" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtServerPort" Height="44" FontSize="15" Width="160"
                                          HorizontalAlignment="Left" Text="5150" Margin="0,0,0,16"/>
                                 <StackPanel x:Name="PanelClientSettings" Visibility="Collapsed">
-                                    <TextBlock Text="Sunucu Adi veya IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBlock Text="Sunucu Adı veya IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                     <TextBox x:Name="TxtServerIp" Height="44" FontSize="15" Width="240"
                                              HorizontalAlignment="Left" Margin="0,0,0,4"/>
-                                    <TextBlock Text="Ipucu: Sunucunun bilgisayar adini yazarsaniz IP degisse bile baglanti kopmaz."
-                                               FontSize="11" Foreground="#7F8C8D" Margin="0,0,0,16"
+                                    <TextBlock Text="İpucu: Sunucunun bilgisayar adını yazarsanız IP değişse bile bağlantı kopmaz."
+                                               FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,0,0,16"
                                                TextWrapping="Wrap" MaxWidth="240" HorizontalAlignment="Left"/>
                                 </StackPanel>
-                                <TextBlock Text="API Kullanici Adi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="API Kullanıcı Adı" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtApiUsername" Height="44" FontSize="15" Width="240"
                                          HorizontalAlignment="Left" Margin="0,0,0,16"/>
-                                <TextBlock Text="API Sifresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="API Şifresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                 <PasswordBox x:Name="TxtApiPassword" Height="44" FontSize="15" Width="240"
                                              HorizontalAlignment="Left" Margin="0,0,0,16"/>
                                 <StackPanel x:Name="PanelTestConnection" Orientation="Horizontal"
                                             Margin="0,0,0,20" Visibility="Collapsed">
                                     <Button Style="{StaticResource SecondaryButton}" Height="44" Padding="20,0" Margin="0,0,12,0"
                                             Click="BtnTestConnection_Click">
-                                        <TextBlock Text="Baglanti Test Et" Foreground="White" FontWeight="SemiBold"/>
+                                        <TextBlock Text="Bağlantı Test Et" Foreground="White" FontWeight="SemiBold"/>
                                     </Button>
                                     <TextBlock x:Name="TxtConnectionStatus" FontSize="14" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <Button Style="{StaticResource PrimaryButton}" Height="48" FontSize="15"
                                         Padding="28,0" HorizontalAlignment="Left" Click="BtnSaveNetwork_Click">
-                                    <TextBlock Text="Ayarlari Kaydet" Foreground="White" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Ayarları Kaydet" Foreground="White" FontWeight="SemiBold"/>
                                 </Button>
                             </StackPanel>
                         </Border>
@@ -692,7 +692,7 @@
                     <StackPanel x:Name="PanelYazici" Visibility="Collapsed">
                         <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="520" HorizontalAlignment="Left">
                             <StackPanel>
-                                <TextBlock Text="Yazici Baglantisi" FontSize="16" FontWeight="Bold"
+                                <TextBlock Text="Yazıcı Bağlantısı" FontSize="16" FontWeight="Bold"
                                            Foreground="#2C3E50" Margin="0,0,0,20"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                     <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
@@ -707,13 +707,13 @@
                                         <StackPanel Orientation="Horizontal">
                                             <RadioButton x:Name="RbLan" GroupName="PrinterType"
                                                          Checked="PrinterType_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Ag (LAN)" FontSize="14" FontWeight="SemiBold"
+                                            <TextBlock Text="Ağ (LAN)" FontSize="14" FontWeight="SemiBold"
                                                        Foreground="#2C3E50" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
                                 <StackPanel x:Name="PanelUsb" Margin="0,0,0,16">
-                                    <TextBlock Text="Yazici Adi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBlock Text="Yazıcı Adı" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
                                     <TextBox x:Name="TxtUsbPrinterName" Height="44" FontSize="15"
                                              HorizontalAlignment="Left" Width="320"/>
                                 </StackPanel>

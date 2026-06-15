@@ -17,6 +17,9 @@
             <SolidColorBrush x:Key="LightBrush" Color="#ECF0F1"/>
             <SolidColorBrush x:Key="TextBrush" Color="#2C3E50"/>
             <SolidColorBrush x:Key="MutedBrush" Color="#95A5A6"/>
+            <!-- Bilgi taşıyan ikincil metin için okunaklı gri (MutedBrush'tan koyu).
+                 MutedBrush yalnız dekoratif/koyu-zemin için kalsın. -->
+            <SolidColorBrush x:Key="SubtleTextBrush" Color="#5D6D7E"/>
 
             <!-- GENEL BUTON -->
             <Style x:Key="BaseButton" TargetType="Button">
@@ -127,10 +130,37 @@
                 <Setter Property="BorderThickness" Value="1.5"/>
             </Style>
 
-            <!-- TEXTBLOCK -->
+            <!-- TEXTBLOCK (varsayılan gövde metni) -->
             <Style TargetType="TextBlock">
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            </Style>
+
+            <!-- TİPOGRAFİ ÖLÇEĞİ — tutarlı başlık/etiket/yardım metni -->
+            <Style x:Key="PageTitle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+            </Style>
+
+            <Style x:Key="SectionTitle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+            </Style>
+
+            <!-- Form etiketi (ör. "Kullanıcı Adı") -->
+            <Style x:Key="LabelText" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+            </Style>
+
+            <!-- İkincil/yardım metni — okunaklı (yaşlı gözler için ≥13px, koyu gri) -->
+            <Style x:Key="Caption" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
 
 

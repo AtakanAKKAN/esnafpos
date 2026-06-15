@@ -42,8 +42,7 @@
 
         <!-- Sayfa başlığı -->
         <TextBlock Grid.Row="2" Text="Masalar"
-                   FontSize="24" FontWeight="Bold"
-                   Foreground="{StaticResource PrimaryBrush}"
+                   Style="{StaticResource PageTitle}"
                    Margin="0,12,0,20"/>
 
         <!-- Masa kartları -->
@@ -84,8 +83,8 @@
                                                            FontSize="17" FontWeight="Bold"
                                                            Foreground="{StaticResource PrimaryBrush}"
                                                            Margin="0,0,0,6"/>
-                                                <TextBlock x:Name="TxtBos" Text="Bos"
-                                                           FontSize="13" Foreground="{StaticResource MutedBrush}"/>
+                                                <TextBlock x:Name="TxtBos" Text="Boş"
+                                                           FontSize="13" Foreground="{StaticResource SubtleTextBrush}"/>
                                                 <StackPanel x:Name="PnlAcik" Visibility="Collapsed">
                                                     <TextBlock Text="{Binding CurrentTotal, StringFormat='{}{0:N2} TL'}"
                                                                FontSize="14" FontWeight="Bold"
@@ -99,9 +98,10 @@
                                                     <TextBlock Text="{Binding CurrentTotal, StringFormat='{}{0:N2} TL'}"
                                                                FontSize="15" FontWeight="Bold"
                                                                Foreground="{StaticResource DangerBrush}"/>
-                                                    <TextBlock Text="Odeme Bekliyor"
-                                                               FontSize="11" Foreground="{StaticResource DangerBrush}"
-                                                               Opacity="0.8" Margin="0,2,0,0"/>
+                                                    <TextBlock Text="Ödeme Bekliyor"
+                                                               FontSize="12" FontWeight="SemiBold"
+                                                               Foreground="{StaticResource DangerBrush}"
+                                                               Opacity="0.85" Margin="0,2,0,0"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </Grid>
