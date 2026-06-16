@@ -19,6 +19,15 @@
     <Page Remove="EsnafPos.License\**" />
   </ItemGroup>
 
+  <!-- Test projesi ana derlemeye dahil olmasın (kök dizin glob'u) -->
+  <ItemGroup>
+    <Compile Remove="EsnafPos.Tests\**" />
+    <Content Remove="EsnafPos.Tests\**" />
+    <None Remove="EsnafPos.Tests\**" />
+    <EmbeddedResource Remove="EsnafPos.Tests\**" />
+    <Page Remove="EsnafPos.Tests\**" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="esnafpos.ico" />
   </ItemGroup>

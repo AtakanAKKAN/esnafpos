@@ -17,8 +17,17 @@ namespace EsnafPos.Data
         public DbSet<OrderChangeLog> OrderChangeLogs { get; set; }
         public DbSet<AppChannel>     AppChannels     { get; set; }  // Kanal yonetimi
 
+        // Uygulama yolu (varsayilan) — OnConfiguring DB yolunu kurar
+        public AppDbContext() { }
+
+        // Test/DI: dışarıdan yapılandırılmış options (ör. in-memory Sqlite)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
+            // Dışarıdan zaten yapılandırıldıysa (testler) dosya yolunu kurma
+            if (options.IsConfigured) return;
+
             string dbPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "EsnafPos", "esnafpos.db");
