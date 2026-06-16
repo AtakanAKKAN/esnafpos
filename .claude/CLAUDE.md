@@ -30,6 +30,32 @@ Bu dosya Claude Code'un projeyi anlaması için hazırlanmıştır. Yeni bir otu
 
 ---
 
+## Son Durum (2026-06-16) — Güncel, ÖNCE BUNU OKU
+
+> Bu bölüm en güncel gerçeği yansıtır. Aşağıdaki eski bölümlerde **UDP keşfine (NetworkDiscovery / Port 5151)** dair her şey ARTIK GEÇERSİZ.
+
+**Ağ / bağlanma (DEĞİŞTİ):**
+- UDP otomatik keşif **kaldırıldı** — `Network/NetworkDiscovery.cs` artık kullanılmıyor.
+- İstemci sunucuya **bilgisayar adı (hostname) VEYA IP** ile bağlanır (Ağ Ayarları → ServerIp). Hostname IP değişse de sabit kalır. `ApiClient` aday sırası: `hostname` → `hostname.local` (mDNS) → önbellekteki son IP (`server_ip.cache`).
+- **Tuzak:** hostname'ler Windows'ta önce IPv6'ya çözülür → `ApiServer` artık `0.0.0.0` (IPv4) **+ `[::]` (IPv6) dual-stack** dinler. Bunu bozma.
+- Server modunda ilk açılışta **5150/TCP Windows Firewall kuralı otomatik eklenir** (`Services/FirewallService.cs`, gerekirse UAC).
+
+**Dayanıklılık:**
+- `ApiServer`: auth öncesi **global hata middleware** — beklenmedik exception'da bare 500 yerine `{error,detail}` JSON + `server_error.log`.
+- `ApiClient`: bağlantı kopunca yeniden-çözümleme + GET retry; **POST'larda otomatik tekrar YOK** (çift ödeme/ürün riski).
+
+**Testler (YENİ):** `EsnafPos.Tests` (xUnit + EF Core Sqlite in-memory), 11 test (Reports/Payment/Order para mantığı). Çalıştır: `dotnet test EsnafPos.Tests\EsnafPos.Tests.csproj`. `AppDbContext`'in `DbContextOptions` ctor'u testler içindir. **Para mantığına dokununca testleri koş.**
+
+**Fiş (PrinterService):** Başlık/alt artık İşletme Ayarları'ndan (BusinessName/Adres/Telefon/ReceiptNote); Türkçe karakterler düzeltildi; **Gün Sonu (Z) özeti** yazdırma var (Raporlar → Günlük). ⚠️ Fişe basılan Türkçe glifler **gerçek termal yazıcıda doğrulanmadı** (ESC t 0x12 + cp1254); bozuksa `SET_CODEPAGE_TURKISH` ayarlanmalı.
+
+**Tasarım:** ~200 UI metninde Türkçe karakter + okunabilirlik; App.xaml'e tipografi ölçeği + `SubtleTextBrush`. **KURAL:** Türkçe düzeltirken DB'de saklanan/karşılaştırılan değerlere DOKUNMA — kanal seed adları (`Bekci`/`Diger`), `OrderChangeLog.Reason` (`Urun Iptali`/`Urun Degisimi`), `Portion`, enum'lar. ChangeLog rozeti için `Helpers/ReasonDisplayConverter.cs`.
+
+**Müşteri kararı — OLDUĞU GİBİ kalacak (DEĞİŞTİRME):** para güvenliği onayları (ödeme/ürün silme) + porsiyon akışı ("önce porsiyon sonra ürün").
+
+**Kalan:** (1) fiş Türkçe glif doğrulaması (yazıcı başında), (2) bu dosyadaki + ARCHITECTURE.md'deki eski UDP-keşif bölümlerini temizleme.
+
+---
+
 ## Çalışma Modları
 
 Uygulama 3 modda çalışır (`AppMode` enum):
@@ -40,14 +66,14 @@ Uygulama 3 modda çalışır (`AppMode` enum):
 
 ### 2. Server (Sunucu)
 - DB ve API bu bilgisayarda
-- Port 5150'de HTTP API açar
-- Port 5151'de UDP discovery dinler
+- Port 5150'de HTTP API açar (IPv4 + IPv6 dual-stack)
+- İlk açılışta 5150/TCP firewall kuralını otomatik ekler (FirewallService)
 - `App.Server = new ApiServer(...)`
 
 ### 3. Client (İstemci)
 - 2. ekran bilgisayarı
 - Tüm işlemler HTTP API üzerinden sunucuya gider
-- Açılışta UDP broadcast ile sunucuyu otomatik bulur (NetworkDiscovery)
+- Sunucuya **hostname (bilgisayar adı) veya IP** ile bağlanır (ServerIp); fallback: .local → cache IP. (UDP keşif KALDIRILDI)
 - `App.Client = new ApiClient(...)`
 - **Lisans kontrolü YAPILMAZ** — sadece sunucuda yapılır
 

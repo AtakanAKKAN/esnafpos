@@ -32,10 +32,16 @@
 - Admin panelde "Ömür Boyu Lisans" yazar
 - **Fiyatlandırma:** Süreli ₺599/yıl, Lifetime ₺1.999
 
-### NetworkDiscovery İyileştirme
-- Şu an sadece açılışta keşif yapılıyor
-- İstemci çalışırken sunucu IP değişirse bağlantı kopuyor
-- Periyodik yeniden keşif eklenebilir
+### Fiş Türkçe glif doğrulaması (YAZICI BAŞINDA)
+- Fişe basılan Türkçe karakterler (ESC t 0x12 + cp1254) gerçek termal yazıcıda test edilmeli
+- Bozuk çıkarsa `Services/PrinterService.cs` → `SET_CODEPAGE_TURKISH` değeri yazıcıya göre ayarlanmalı
+
+### Dokümantasyon temizliği
+- ARCHITECTURE.md hâlâ kaldırılan UDP keşfini / IP-bağlı bağlanmayı anlatıyor → hostname + dual-stack'e göre güncellenmeli
+- (CLAUDE.md'ye "Son Durum (2026-06-16)" özeti eklendi)
+
+### NOT — Müşteri kararıyla OLDUĞU GİBİ kalacak
+- Para güvenliği onayları (ödeme/ürün silme) ve porsiyon akışı DEĞİŞTİRİLMEYECEK
 
 ---
 
@@ -55,7 +61,12 @@
 - [x] Kanal sistemi (Masa, Kurye, Trendyol vb.)
 - [x] Çok kullanıcı (Admin/Cashier PIN)
 - [x] Sunucu-İstemci modu (HTTP API)
-- [x] UDP otomatik sunucu keşfi
+- [x] ~~UDP otomatik sunucu keşfi~~ → KALDIRILDI (yerine hostname + dual-stack)
+- [x] Hostname/IP ile bağlanma + IPv4/IPv6 dual-stack + 5150 firewall otomasyonu (2026-06)
+- [x] Sunucu/istemci dayanıklılığı: global hata yönetimi + yeniden-çözümleme (2026-06)
+- [x] Otomatik testler — EsnafPos.Tests, 11 test (para mantığı) (2026-06)
+- [x] Fiş: İşletme ayarlarından + Türkçe + Gün Sonu (Z) özeti (2026-06)
+- [x] Kapsamlı Türkçe karakter + okunabilirlik + tipografi cilası (2026-06)
 - [x] Online lisans sistemi (aktivasyon + periyodik kontrol)
 - [x] Otomatik güncelleme
 - [x] Günlük yedekleme (30 gün saklama)
