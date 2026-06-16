@@ -14,18 +14,20 @@ namespace EsnafPos.Views
         private readonly ReportsViewModel _vm;
         private readonly ExcelExportService _excel;
         private readonly SessionService _session;
+        private readonly PrinterService _printer;
 
         private readonly SolidColorBrush _activeColor;
         private readonly SolidColorBrush _inactiveColor;
         private readonly SolidColorBrush _activeText;
         private readonly SolidColorBrush _inactiveText;
 
-        public ReportsPage(ReportsViewModel vm, ExcelExportService excel, SessionService session)
+        public ReportsPage(ReportsViewModel vm, ExcelExportService excel, SessionService session, PrinterService printer)
         {
             InitializeComponent();
             _vm = vm;
             _excel = excel;
             _session = session;
+            _printer = printer;
             DataContext = vm;
 
             _activeColor   = (SolidColorBrush)FindResource("AccentBrush");
@@ -164,5 +166,16 @@ namespace EsnafPos.Views
 
         private void BtnExportMonthly_Click(object sender, RoutedEventArgs e)
             => _excel.ExportMonthlyReport(_vm);
+
+        // Gün sonu (Z) özetini yazıcıdan bas — günlük rapor verisini yeniden kullanır
+        private async void BtnPrintDailySummary_Click(object sender, RoutedEventArgs e)
+        {
+            var products = _vm.DailyProductSales
+                .Select(p => (p.ProductName, p.Portion, p.TotalQuantity, p.TotalRevenue))
+                .ToList();
+            await _printer.PrintDailySummary(
+                _vm.SelectedDate, _vm.DailyCash, _vm.DailyCard,
+                _vm.DailyVeresiye, _vm.DailyOrderCount, products);
+        }
     }
 }

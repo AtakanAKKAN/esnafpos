@@ -251,11 +251,18 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Button Height="36" FontSize="13" Padding="14,0"
-                                        Background="#27AE60" BorderThickness="0" HorizontalAlignment="Left"
-                                        Click="BtnExportDaily_Click">
-                                    <TextBlock Text="⬇ Excel Indir" Foreground="White" FontWeight="SemiBold"/>
-                                </Button>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <Button Height="36" FontSize="13" Padding="14,0" Margin="0,0,10,0"
+                                            Background="#27AE60" BorderThickness="0"
+                                            Click="BtnExportDaily_Click">
+                                        <TextBlock Text="⬇ Excel İndir" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                    <Button Height="36" FontSize="13" Padding="14,0"
+                                            Background="#2C3E50" BorderThickness="0"
+                                            Click="BtnPrintDailySummary_Click">
+                                        <TextBlock Text="🧾 Gün Sonu Yazdır" Foreground="White" FontWeight="SemiBold"/>
+                                    </Button>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 

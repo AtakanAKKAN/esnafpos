@@ -58,28 +58,112 @@ namespace EsnafPos.Services
             }
         }
 
-        // ─── FIS YAPISI ──────────────────────────────────────
-        private byte[] BuildCommands(Order order, List<OrderItem> items, bool isCheck)
+        // ─── GUN SONU (Z) OZETI ──────────────────────────────
+        public async Task<bool> PrintDailySummary(
+            DateTime date, decimal cash, decimal card, decimal veresiye, int orderCount,
+            IReadOnlyList<(string Name, string Portion, int Qty, decimal Revenue)> products)
+        {
+            try
+            {
+                await SendToPrinter(BuildDailySummary(date, cash, card, veresiye, orderCount, products));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ShowPrinterError(ex.Message);
+                return false;
+            }
+        }
+
+        private byte[] BuildDailySummary(
+            DateTime date, decimal cash, decimal card, decimal veresiye, int orderCount,
+            IReadOnlyList<(string Name, string Portion, int Qty, decimal Revenue)> products)
         {
             var e = new EPSON();
             const int W = 32;
+            var biz = _settings.Business;
+            string header = !string.IsNullOrWhiteSpace(biz.BusinessName) ? biz.BusinessName
+                          : !string.IsNullOrWhiteSpace(biz.AppName)      ? biz.AppName
+                          : "Esnaf POS";
 
-            // Baslik
             var cmd = ByteSplicer.Combine(
                 e.Initialize(),
                 SET_CODEPAGE_TURKISH,
                 e.CenterAlign(),
                 e.SetStyles(PrintStyle.Bold | PrintStyle.DoubleWidth),
-                Enc("Corbaci Ciko\n"),
+                Enc(header + "\n"),
+                e.SetStyles(PrintStyle.Bold),
+                Enc("- GÜN SONU -\n"),
+                e.SetStyles(PrintStyle.None),
+                Enc(date.ToString("dd.MM.yyyy") + "\n"),
+                Enc("================================\n"),
+                e.LeftAlign(),
+                Enc(FormatLine("Nakit:", $"{cash:N2} TL", W) + "\n"),
+                Enc(FormatLine("Kart:",  $"{card:N2} TL", W) + "\n"),
+                e.SetStyles(PrintStyle.Bold),
+                Enc(FormatLine("TOPLAM:", $"{(cash + card):N2} TL", W) + "\n"),
+                e.SetStyles(PrintStyle.None),
+                Enc(FormatLine("Veresiye:", $"{veresiye:N2} TL", W) + "\n"),
+                Enc(FormatLine("Satış adedi:", orderCount.ToString(), W) + "\n"),
+                Enc("================================\n")
+            );
+
+            if (products.Count > 0)
+            {
+                cmd = ByteSplicer.Combine(cmd,
+                    e.SetStyles(PrintStyle.Bold),
+                    Enc("Ürün Bazlı Satışlar\n"),
+                    e.SetStyles(PrintStyle.None));
+                foreach (var p in products)
+                {
+                    var name = p.Portion == "Tam" ? p.Name : $"{p.Name} ({p.Portion})";
+                    cmd = ByteSplicer.Combine(cmd,
+                        Enc(FormatLine($"{p.Qty}x {name}", $"{p.Revenue:N2} TL", W) + "\n"));
+                }
+                cmd = ByteSplicer.Combine(cmd, Enc("================================\n"));
+            }
+
+            cmd = ByteSplicer.Combine(cmd,
+                e.CenterAlign(),
+                Enc(DateTime.Now.ToString("dd.MM.yyyy HH:mm") + " yazdırıldı\n"),
+                Enc("\n"), Enc("\n"), Enc("\n"), Enc("\n"),
+                e.FullCut());
+
+            return cmd;
+        }
+
+        // ─── FIS YAPISI ──────────────────────────────────────
+        private byte[] BuildCommands(Order order, List<OrderItem> items, bool isCheck)
+        {
+            var e = new EPSON();
+            const int W = 32;
+            var biz = _settings.Business;
+            string header = !string.IsNullOrWhiteSpace(biz.BusinessName) ? biz.BusinessName
+                          : !string.IsNullOrWhiteSpace(biz.AppName)      ? biz.AppName
+                          : "Esnaf POS";
+
+            // Baslik — isletme adi (Admin → Isletme Ayarlari'ndan)
+            var cmd = ByteSplicer.Combine(
+                e.Initialize(),
+                SET_CODEPAGE_TURKISH,
+                e.CenterAlign(),
+                e.SetStyles(PrintStyle.Bold | PrintStyle.DoubleWidth),
+                Enc(header + "\n"),
                 e.SetStyles(PrintStyle.None)
             );
+
+            // Adres / telefon (doluysa)
+            if (!string.IsNullOrWhiteSpace(biz.Address))
+                cmd = ByteSplicer.Combine(cmd, Enc(biz.Address + "\n"));
+            if (!string.IsNullOrWhiteSpace(biz.Phone))
+                cmd = ByteSplicer.Combine(cmd, Enc("Tel: " + biz.Phone + "\n"));
 
             if (isCheck)
             {
                 // Adisyon basliginda "ADiSYON" yazisi
                 cmd = ByteSplicer.Combine(cmd,
                     e.SetStyles(PrintStyle.Bold),
-                    Enc("- ADiSYON -\n"),
+                    Enc("- ADİSYON -\n"),
                     e.SetStyles(PrintStyle.None)
                 );
             }
@@ -136,12 +220,14 @@ namespace EsnafPos.Services
                 e.SetStyles(PrintStyle.Bold),
                 Enc(FormatLine("TOPLAM", $"{order.TotalAmount:N2} TL", W) + "\n"),
                 e.SetStyles(PrintStyle.None),
-                Enc(FormatLine("Odeme:", GetPaymentTypeName(order.PaymentType), W) + "\n"),
+                Enc(FormatLine("Ödeme:", GetPaymentTypeName(order.PaymentType), W) + "\n"),
                 Enc("\n"),
                 Enc("\n"),
                 e.CenterAlign(),
                 e.SetStyles(PrintStyle.Bold),
-                Enc("Afiyet olsun, yine bekleriz!\n"),
+                Enc((string.IsNullOrWhiteSpace(biz.ReceiptNote)
+                        ? "Afiyet olsun, yine bekleriz!"
+                        : biz.ReceiptNote) + "\n"),
                 e.SetStyles(PrintStyle.None),
                 Enc("\n"),
                 Enc("\n"),
@@ -170,8 +256,8 @@ namespace EsnafPos.Services
         private static string GetPaymentTypeName(PaymentType? type) => type switch
         {
             PaymentType.Cash => "Nakit",
-            PaymentType.CardDebit => "Banka Karti",
-            PaymentType.CardCredit => "Kredi Karti",
+            PaymentType.CardDebit => "Banka Kartı",
+            PaymentType.CardCredit => "Kredi Kartı",
             _ => "-"
         };
 
