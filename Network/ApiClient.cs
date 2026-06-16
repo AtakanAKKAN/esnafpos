@@ -108,6 +108,32 @@ namespace EsnafPos.Network
             catch { }
         }
 
+        // ─── DAYANIKLI GET ───────────────────────────────────
+        // İdempotent okuma: gerekirse adresi çöz, gönder. Yalnız BAĞLANTI koparsa
+        // (exception) adres bayatlamış olabilir → yeniden çöz ve bir kez tekrar dene.
+        // 4xx/5xx (sunucu ulaşılabilir, içerik yok) yeniden-çözümlemeyi tetiklemez.
+        private async Task<T?> GetJsonAsync<T>(string path)
+        {
+            for (int attempt = 0; attempt < 2; attempt++)
+            {
+                try
+                {
+                    await EnsureResolvedAsync();
+                    var resp = await _http.GetAsync($"{_baseUrl}{path}");
+                    _isConnected = resp.IsSuccessStatusCode;
+                    return resp.IsSuccessStatusCode
+                        ? await resp.Content.ReadFromJsonAsync<T>()
+                        : default;
+                }
+                catch
+                {
+                    _isConnected = false;
+                    _resolved    = false;   // bağlantı koptu → sonraki denemede yeniden çöz
+                }
+            }
+            return default;
+        }
+
         // ─── BAĞLANTI TEST ───────────────────────────────────
         public async Task<bool> TestConnectionAsync()
         {
@@ -122,71 +148,42 @@ namespace EsnafPos.Network
         {
             try
             {
+                await EnsureResolvedAsync();
                 var resp = await _http.PostAsJsonAsync($"{_baseUrl}/api/login",
                     new { Username = username, PinHash = pinHash });
                 if (!resp.IsSuccessStatusCode) return null;
                 return await resp.Content.ReadFromJsonAsync<LoginResponseDto>();
             }
-            catch { return null; }
+            catch { _resolved = false; return null; }
         }
 
         public async Task<List<UserDto>> GetUsersAsync()
-        {
-            try
-            {
-                await EnsureResolvedAsync();   // login'de ilk temas — çalışan sunucu adresini bul
-                var result = await _http.GetFromJsonAsync<List<UserDto>>($"{_baseUrl}/api/users");
-                return result ?? new();
-            }
-            catch { return new(); }
-        }
+            => await GetJsonAsync<List<UserDto>>("/api/users") ?? new();
 
         // ─── TABLES ──────────────────────────────────────────
         public async Task<List<TableDto>> GetTablesAsync()
-        {
-            try
-            {
-                var result = await _http.GetFromJsonAsync<List<TableDto>>($"{_baseUrl}/api/tables");
-                return result ?? new();
-            }
-            catch { return new(); }
-        }
+            => await GetJsonAsync<List<TableDto>>("/api/tables") ?? new();
 
         // ─── ORDERS ──────────────────────────────────────────
         public async Task<OrderDto?> GetOrderForTableAsync(int tableId)
-        {
-            try
-            {
-                var resp = await _http.GetAsync($"{_baseUrl}/api/orders/{tableId}");
-                if (!resp.IsSuccessStatusCode) return null;
-                return await resp.Content.ReadFromJsonAsync<OrderDto>();
-            }
-            catch { return null; }
-        }
+            => await GetJsonAsync<OrderDto>($"/api/orders/{tableId}");
 
         public async Task<List<OrderItemDto>> GetOrderItemsAsync(int orderId)
-        {
-            try
-            {
-                var result = await _http.GetFromJsonAsync<List<OrderItemDto>>(
-                    $"{_baseUrl}/api/orderitems/{orderId}");
-                return result ?? new();
-            }
-            catch { return new(); }
-        }
+            => await GetJsonAsync<List<OrderItemDto>>($"/api/orderitems/{orderId}") ?? new();
 
         // ─── ADD PRODUCT ─────────────────────────────────────
         public async Task<int?> AddProductAsync(int tableId, AddProductRequest req)
         {
             try
             {
+                await EnsureResolvedAsync();
                 var resp = await _http.PostAsJsonAsync(
                     $"{_baseUrl}/api/orders/{tableId}/addproduct", req);
                 if (!resp.IsSuccessStatusCode) return null;
                 var result = await resp.Content.ReadFromJsonAsync<AddProductResponse>();
                 return result?.OrderId;
             }
-            catch { return null; }
+            catch { _resolved = false; return null; }
         }
 
         // ─── ADD QUANTITY / REMOVE ────────────────────────────
@@ -194,79 +191,52 @@ namespace EsnafPos.Network
         {
             try
             {
+                await EnsureResolvedAsync();
                 var resp = await _http.PostAsync(
                     $"{_baseUrl}/api/orderitems/{itemId}/addquantity", null);
                 return resp.IsSuccessStatusCode;
             }
-            catch { return false; }
+            catch { _resolved = false; return false; }
         }
 
         public async Task<bool> RemoveItemAsync(int itemId)
         {
             try
             {
+                await EnsureResolvedAsync();
                 var resp = await _http.PostAsync(
                     $"{_baseUrl}/api/orderitems/{itemId}/remove", null);
                 return resp.IsSuccessStatusCode;
             }
-            catch { return false; }
+            catch { _resolved = false; return false; }
         }
 
         // ─── PAYMENTS ────────────────────────────────────────
         public async Task<List<PaymentDto>> GetPaymentsAsync(int orderId)
-        {
-            try
-            {
-                var result = await _http.GetFromJsonAsync<List<PaymentDto>>(
-                    $"{_baseUrl}/api/payments/{orderId}");
-                return result ?? new();
-            }
-            catch { return new(); }
-        }
+            => await GetJsonAsync<List<PaymentDto>>($"/api/payments/{orderId}") ?? new();
 
         public async Task<CompletePaymentResponse?> CompletePaymentAsync(CompletePaymentRequest req)
         {
             try
             {
+                await EnsureResolvedAsync();
                 var resp = await _http.PostAsJsonAsync($"{_baseUrl}/api/payments", req);
                 if (!resp.IsSuccessStatusCode) return null;
                 return await resp.Content.ReadFromJsonAsync<CompletePaymentResponse>();
             }
-            catch { return null; }
+            catch { _resolved = false; return null; }
         }
 
         // ─── CATEGORIES + PRODUCTS ────────────────────────────
         public async Task<List<Category>> GetCategoriesAsync()
-        {
-            try
-            {
-                var result = await _http.GetFromJsonAsync<List<Category>>($"{_baseUrl}/api/categories");
-                return result ?? new();
-            }
-            catch { return new(); }
-        }
+            => await GetJsonAsync<List<Category>>("/api/categories") ?? new();
 
         public async Task<List<Product>> GetProductsAsync(int categoryId)
-        {
-            try
-            {
-                var result = await _http.GetFromJsonAsync<List<Product>>(
-                    $"{_baseUrl}/api/products/{categoryId}");
-                return result ?? new();
-            }
-            catch { return new(); }
-        }
+            => await GetJsonAsync<List<Product>>($"/api/products/{categoryId}") ?? new();
 
         // ─── VERESIYE ────────────────────────────────────────
         public async Task<List<PaymentDto>> GetVeresiyeAsync()
-        {
-            try
-            {
-                var result = await _http.GetFromJsonAsync<List<PaymentDto>>($"{_baseUrl}/api/veresiye");
-                return result ?? new();
-            }
-            catch { return new(); }
-        }
+            => await GetJsonAsync<List<PaymentDto>>("/api/veresiye") ?? new();
     }
 
     // ─── DTO'LAR ─────────────────────────────────────────────

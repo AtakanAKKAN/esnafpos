@@ -43,6 +43,34 @@ namespace EsnafPos.Network
 
             _app = builder.Build();
 
+            // ─── GLOBAL HATA YAKALAMA ─────────────────────────
+            // Beklenmedik bir exception'da bare 500 yerine tutarlı JSON döndür ve logla.
+            // Böylece tek bir bozuk endpoint tüm istemci akışını kırmaz.
+            _app.Use(async (ctx, next) =>
+            {
+                try { await next(); }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        var logPath = System.IO.Path.Combine(
+                            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                            "EsnafPos", "server_error.log");
+                        await System.IO.File.AppendAllTextAsync(logPath,
+                            $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}  {ctx.Request.Method} {ctx.Request.Path}\n" +
+                            $"  {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}\n\n");
+                    }
+                    catch { /* loglama da basarisizsa yut */ }
+
+                    if (!ctx.Response.HasStarted)
+                    {
+                        ctx.Response.StatusCode  = 500;
+                        ctx.Response.ContentType = "application/json; charset=utf-8";
+                        await ctx.Response.WriteAsJsonAsync(new { error = "Sunucu hatasi", detail = ex.Message });
+                    }
+                }
+            });
+
             // ─── AUTH MIDDLEWARE ──────────────────────────────
             _app.Use(async (ctx, next) =>
             {
