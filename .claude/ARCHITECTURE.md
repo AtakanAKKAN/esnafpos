@@ -13,14 +13,17 @@ UI (WPF) → ViewModel → AppDbContext (SQLite) → Disk
 ```
 UI (WPF) → ViewModel → AppDbContext (SQLite) → Disk
                     ↑
-              ApiServer (HTTP :5150) ← İstemci bilgisayarları
-              Discovery (UDP :5151)  ← İstemci keşfi
+              ApiServer (HTTP :5150, IPv4 + IPv6 dual-stack) ← İstemci bilgisayarları
 ```
+> İlk açılışta 5150/TCP Windows Firewall kuralı otomatik eklenir (`Services/FirewallService.cs`).
 
 ### İstemci Modu
 ```
 UI (WPF) → ViewModel → ApiClient → HTTP → Sunucu bilgisayar
 ```
+İstemci sunucuya **hostname (bilgisayar adı) veya IP** ile bağlanır (`ServerIp`).
+Aday sırası: `hostname` → `hostname.local` (mDNS) → önbellekteki son IP (`server_ip.cache`).
+> UDP otomatik keşif (eski `NetworkDiscovery` / port 5151) **kaldırıldı** — hostname IP değişse de sabit kaldığı için tercih edildi.
 
 ---
 
@@ -198,14 +201,13 @@ TotalQuantity = CollectedQuantity + VeresiyeQuantity > 0
 
 ## Güvenlik Duvarı Gereksinimleri
 
-Sunucu bilgisayarda açık olması gereken portlar:
+Sunucu bilgisayarda açık olması gereken port (sunucu modunda ilk açılışta
+`Services/FirewallService.cs` tarafından otomatik eklenir, gerekirse UAC ister):
 ```powershell
-# HTTP API (zorunlu)
+# HTTP API (zorunlu) — 5150/TCP
 New-NetFirewallRule -DisplayName "EsnafPos API" -Direction Inbound -Protocol TCP -LocalPort 5150 -Action Allow
-
-# UDP Discovery (otomatik IP keşfi için)
-New-NetFirewallRule -DisplayName "EsnafPos Discovery" -Direction Inbound -Protocol UDP -LocalPort 5151 -Action Allow
 ```
+> Eski UDP Discovery (5151) kuralı artık gerekmiyor — UDP keşif kaldırıldı.
 
 ---
 

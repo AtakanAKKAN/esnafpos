@@ -21,6 +21,14 @@
 **Düzeltme:** Tüm `Task.Run(...)` → `_ = Task.Run(...)` yapıldı  
 **Durum:** ✅ Düzeltildi (2026-06-15) — App.xaml.cs'te 4 çağrı da `_ =` ile; doğrulandı
 
+### 4. Lisans: geçici I/O hatası masum kullanıcıyı kilitliyordu
+**Dosya:** `Services/LicenseService.cs`  
+**Sorun 1:** `TryReadCacheFile` geçici dosya kilidini (antivirüs/yedekleme/eşzamanlı yazma) `null` döndürerek "dosya yok/bozuk" sanıyordu → periyodik kontrolde `null` = tamper → "Sistem tarihi hatalı" + Shutdown.  
+**Sorun 2:** 24s periyodik kontrol döngü gövdesinde try/catch yoktu → tek `IOException` tüm kontrolü sessizce öldürüyordu.  
+**Düzeltme:** (1) Okumada `IOException` için 3 kez retry (150ms); bozuk JSON yine null. (2) Döngü gövdesi try/catch ile sarıldı — geçici hatada tur atlanır.  
+**ÖNEMLİ:** Tarih-manipülasyonu **mantığına dokunulmadı** (müşteri kararı). Sadece I/O dayanıklılığı.  
+**Durum:** ✅ Düzeltildi (2026-06-17) — Release derleme temiz, 11 test geçti
+
 ---
 
 ## Yakında Eklenecek Özellikler
@@ -37,8 +45,7 @@
 - Bozuk çıkarsa `Services/PrinterService.cs` → `SET_CODEPAGE_TURKISH` değeri yazıcıya göre ayarlanmalı
 
 ### Dokümantasyon temizliği
-- ARCHITECTURE.md hâlâ kaldırılan UDP keşfini / IP-bağlı bağlanmayı anlatıyor → hostname + dual-stack'e göre güncellenmeli
-- (CLAUDE.md'ye "Son Durum (2026-06-16)" özeti eklendi)
+- ✅ Tamamlandı (2026-06-17) — ARCHITECTURE.md ve CLAUDE.md'deki eski UDP keşif (port 5151) / IP-bağlı bağlanma bölümleri kaldırıldı; hostname + IPv4/IPv6 dual-stack + 5150 firewall otomasyonuna göre güncellendi.
 
 ### NOT — Müşteri kararıyla OLDUĞU GİBİ kalacak
 - Para güvenliği onayları (ödeme/ürün silme) ve porsiyon akışı DEĞİŞTİRİLMEYECEK

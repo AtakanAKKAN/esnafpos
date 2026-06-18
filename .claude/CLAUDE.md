@@ -52,7 +52,9 @@ Bu dosya Claude Code'un projeyi anlaması için hazırlanmıştır. Yeni bir otu
 
 **Müşteri kararı — OLDUĞU GİBİ kalacak (DEĞİŞTİRME):** para güvenliği onayları (ödeme/ürün silme) + porsiyon akışı ("önce porsiyon sonra ürün").
 
-**Kalan:** (1) fiş Türkçe glif doğrulaması (yazıcı başında), (2) bu dosyadaki + ARCHITECTURE.md'deki eski UDP-keşif bölümlerini temizleme.
+**Lisans dayanıklılığı (YENİ, 2026-06-17):** Tarih-manipülasyonu **mantığı DEĞİŞMEDİ** (müşteri kararı: olduğu gibi kalacak). Sadece masum kullanıcıyı kazara kilitleyebilecek I/O bug'ları düzeltildi: (1) `TryReadCacheFile` geçici dosya kilidini (antivirüs/yedekleme) "dosya yok/bozuk" sanmasın diye 3 kez retry; (2) 24s periyodik kontrol gövdesi try/catch ile sarıldı (tek istisnada sessizce ölmesin). Not: "kazara tarihi geri al → düzelt" senaryosu zaten güvenli (geri alma eşiği yükseltir).
+
+**Kalan:** (1) fiş Türkçe glif doğrulaması (yazıcı başında), (2) Lifetime (Ömür Boyu) lisans — ertelendi (bkz. TASKS.md).
 
 ---
 
@@ -99,9 +101,9 @@ EsnafPos/
 │   ├── AppDbContext.cs      # EF Core context + Ensure metodları
 │   └── DatabaseInitializer.cs # İlk kurulum seed'i
 ├── Network/
-│   ├── ApiServer.cs         # Gömülü HTTP API (sunucu modu)
-│   ├── ApiClient.cs         # HTTP istemci (istemci modu)
-│   ├── NetworkDiscovery.cs  # UDP otomatik sunucu keşfi
+│   ├── ApiServer.cs         # Gömülü HTTP API (sunucu modu, IPv4+IPv6 dual-stack)
+│   ├── ApiClient.cs         # HTTP istemci (hostname/IP → .local → cache IP)
+│   ├── NetworkDiscovery.cs  # (LEGACY — UDP keşfi KALDIRILDI, kullanılmıyor)
 │   └── NetworkSettings.cs   # AppMode enum + ayarlar
 ├── Services/
 │   ├── LicenseService.cs    # Lisans aktivasyon/kontrol/önbellek
@@ -213,14 +215,13 @@ db.EnsureVeresiyeQuantityColumn(); // OrderItems.VeresiyeQuantity
 - HTTP Basic Auth → `X-Api-Key` header (Base64 username:password)
 - Tüm endpoint'ler `/api/` prefix'i ile başlar
 - Enum'lar string olarak serialize edilir
+- `ApiServer` IPv4 (`0.0.0.0`) + IPv6 (`[::]`) dual-stack dinler (hostname'ler önce IPv6'ya çözülür)
+- Sunucu modunda ilk açılışta 5150/TCP firewall kuralı otomatik eklenir (`FirewallService`)
 
-### Discovery (Port 5151 UDP)
-```
-İstemci → UDP Broadcast: "ESNAFPOS_DISCOVER"
-Sunucu  → UDP Response:  "ESNAFPOS_SERVER:192.168.1.x:5150"
-```
-- Timeout: 4000ms
-- Bulunamazsa kayıtlı IP'ye fallback
+### Sunucuya bağlanma (UDP keşif KALDIRILDI)
+İstemci sunucuya **hostname (bilgisayar adı) veya IP** ile bağlanır (Ağ Ayarları → `ServerIp`).
+`ApiClient` aday sırası: `hostname` → `hostname.local` (mDNS) → önbellekteki son IP (`server_ip.cache`).
+Hostname IP değişse de sabit kaldığı için tercih edilir.
 
 ---
 
