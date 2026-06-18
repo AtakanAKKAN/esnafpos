@@ -134,36 +134,46 @@ namespace EsnafPos.Services
                               .ContinueWith(_ => { });
                     if (token.IsCancellationRequested) break;
 
-                    var cache = LoadCache();
-                    if (cache == null)
+                    // FIX: Bir turdaki geçici hata (dosya kilidi, IO) tüm periyodik
+                    // kontrolü sessizce öldürmesin — try/catch ile turu atla, döngü
+                    // devam etsin. Lisansı sırf geçici bir hata yüzünden engelleme.
+                    try
                     {
-                        System.Windows.Application.Current.Dispatcher.Invoke(
-                            () => onTampered(LicenseStatus.Invalid));
-                        break;
+                        var cache = LoadCache();
+                        if (cache == null)
+                        {
+                            System.Windows.Application.Current.Dispatcher.Invoke(
+                                () => onTampered(LicenseStatus.Invalid));
+                            break;
+                        }
+
+                        var current = CalcRemaining(cache);
+
+                        if (current > cache.LastCheckedRemaining)
+                        {
+                            System.Windows.Application.Current.Dispatcher.Invoke(
+                                () => onTampered(LicenseStatus.Invalid));
+                            break;
+                        }
+
+                        if (current < 0)
+                        {
+                            System.Windows.Application.Current.Dispatcher.Invoke(
+                                () => onTampered(LicenseStatus.Expired));
+                            break;
+                        }
+
+                        cache.LastCheckedRemaining = current;
+                        cache.LastCheckedTime      = DateTime.Now;
+                        cache.Signature = ComputeSignature(cache);
+                        WriteCache(cache);
+
+                        _ = TryRefreshFromServerAsync();
                     }
-
-                    var current = CalcRemaining(cache);
-
-                    if (current > cache.LastCheckedRemaining)
+                    catch (Exception)
                     {
-                        System.Windows.Application.Current.Dispatcher.Invoke(
-                            () => onTampered(LicenseStatus.Invalid));
-                        break;
+                        // Geçici hata — bu turu atla, bir sonraki 24s döngüsünde tekrar dene.
                     }
-
-                    if (current < 0)
-                    {
-                        System.Windows.Application.Current.Dispatcher.Invoke(
-                            () => onTampered(LicenseStatus.Expired));
-                        break;
-                    }
-
-                    cache.LastCheckedRemaining = current;
-                    cache.LastCheckedTime      = DateTime.Now;
-                    cache.Signature = ComputeSignature(cache);
-                    WriteCache(cache);
-
-                    _ = TryRefreshFromServerAsync();
                 }
             }, token);
 #endif
@@ -425,14 +435,32 @@ namespace EsnafPos.Services
 
         private static LicenseCache? TryReadCacheFile(string path)
         {
-            try
+            if (!File.Exists(path)) return null;
+
+            // FIX: Dosya geçici olarak kilitliyse (antivirüs, yedekleme veya
+            // eşzamanlı yazma) tek seferlik okuma hatasını "dosya yok/bozuk"
+            // sanıp lisansı geçersiz saymayalım — kısa aralıklarla birkaç kez
+            // dene. Sadece kalıcı hata / bozuk JSON null döndürür.
+            for (int attempt = 0; attempt < 3; attempt++)
             {
-                if (!File.Exists(path)) return null;
-                var json = File.ReadAllText(path);
-                return JsonSerializer.Deserialize<LicenseCache>(json,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                try
+                {
+                    var json = File.ReadAllText(path);
+                    return JsonSerializer.Deserialize<LicenseCache>(json,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                catch (IOException)
+                {
+                    // Geçici kilit olabilir — kısa bekle ve tekrar dene
+                    Thread.Sleep(150);
+                }
+                catch
+                {
+                    // JSON bozuk / başka kalıcı hata — tekrar denemenin anlamı yok
+                    return null;
+                }
             }
-            catch { return null; }
+            return null;
         }
 
         private static void DeleteCache()
