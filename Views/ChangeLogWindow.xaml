@@ -56,8 +56,8 @@
                         <Border Background="White" CornerRadius="14"
                                 Margin="0,0,0,12" Padding="0">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="8" ShadowDepth="2"
-                                                  Color="#CCCCCC" Opacity="0.12"/>
+                                <DropShadowEffect BlurRadius="16" ShadowDepth="3"
+                                                  Color="#1B2A4A" Opacity="0.12"/>
                             </Border.Effect>
                             <Grid>
                                 <Grid.ColumnDefinitions>

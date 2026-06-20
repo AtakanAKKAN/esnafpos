@@ -86,7 +86,7 @@
                                         </Border>
 
                                         <!-- AZALT -->
-                                        <Button Width="38" Height="38" Background="#E74C3C" BorderThickness="0"
+                                        <Button Width="38" Height="38" Background="#DC2626" BorderThickness="0"
                                                 Tag="{Binding}" Click="BtnDecrease_Click">
                                             <Button.Template>
                                                 <ControlTemplate TargetType="Button">

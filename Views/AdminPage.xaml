@@ -23,7 +23,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- SOL SIDEBAR -->
-        <Border Grid.Column="0" Background="#2C3E50">
+        <Border Grid.Column="0" Background="#1F2A37">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -65,12 +65,12 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock x:Name="TxtPageTitle" FontSize="22" FontWeight="Bold" Foreground="#2C3E50"/>
-                        <TextBlock x:Name="TxtPageSubtitle" FontSize="13" Foreground="#95A5A6" Margin="0,4,0,0"/>
+                        <TextBlock x:Name="TxtPageTitle" FontSize="22" FontWeight="Bold" Foreground="#1F2A37"/>
+                        <TextBlock x:Name="TxtPageSubtitle" FontSize="13" Foreground="#94A3B8" Margin="0,4,0,0"/>
                     </StackPanel>
                     <Border Grid.Column="1" x:Name="LoadingIndicator" Visibility="Collapsed" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <Border Width="8" Height="8" CornerRadius="4" Background="#27AE60" Margin="3,0">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#16A34A" Margin="3,0">
                                 <Border.Triggers>
                                     <EventTrigger RoutedEvent="Border.Loaded">
                                         <BeginStoryboard>
@@ -96,7 +96,7 @@
                         <Border Background="White" CornerRadius="12" Padding="24" Margin="0,0,0,20">
                             <StackPanel>
                                 <TextBlock Text="Yeni Masa Ekle" FontSize="15" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,14"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,14"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox x:Name="TxtNewTableName" Width="260" Height="44" FontSize="14" Margin="0,0,12,0" KeyDown="TxtEnter_AddTable"/>
                                     <Button Style="{StaticResource PrimaryButton}" Height="44" Padding="24,0" Click="BtnAddTable_Click">
@@ -107,7 +107,7 @@
                                         Margin="0,16,0,0" Visibility="Collapsed">
                                     <StackPanel>
                                         <TextBlock Text="Masa Adını Düzenle" FontSize="13" FontWeight="SemiBold"
-                                                   Foreground="#2C3E50" Margin="0,0,0,10"/>
+                                                   Foreground="#1F2A37" Margin="0,0,0,10"/>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBox x:Name="TxtEditTableName" Width="240" Height="40" FontSize="14"
                                                      Margin="0,0,10,0"
@@ -136,16 +136,16 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
-                                                    <TextBlock Text="{Binding Status}" FontSize="12" Foreground="#95A5A6" Margin="0,2,0,0"/>
+                                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#1F2A37"/>
+                                                    <TextBlock Text="{Binding Status}" FontSize="12" Foreground="#94A3B8" Margin="0,2,0,0"/>
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                                    <Button Width="36" Height="36" Margin="0,0,5,0" Background="#95A5A6" BorderThickness="0"
+                                                    <Button Width="36" Height="36" Margin="0,0,5,0" Background="#94A3B8" BorderThickness="0"
                                                             Tag="{Binding}" Click="BtnMoveTableUp_Click" Style="{StaticResource IconBtn}">
                                                         <TextBlock Text="▲" Foreground="White" FontSize="12" FontWeight="Bold"
                                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                     </Button>
-                                                    <Button Width="36" Height="36" Margin="0,0,10,0" Background="#95A5A6" BorderThickness="0"
+                                                    <Button Width="36" Height="36" Margin="0,0,10,0" Background="#94A3B8" BorderThickness="0"
                                                             Tag="{Binding}" Click="BtnMoveTableDown_Click" Style="{StaticResource IconBtn}">
                                                         <TextBlock Text="▼" Foreground="White" FontSize="12" FontWeight="Bold"
                                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -176,11 +176,11 @@
                         <Border Background="White" CornerRadius="12" Padding="16,12" Margin="0,0,0,12">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Kanal:" FontSize="13" FontWeight="SemiBold"
-                                           Foreground="#2C3E50" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                           Foreground="#1F2A37" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <StackPanel x:Name="SpChannelFilter" Orientation="Horizontal"/>
                                 <TextBlock x:Name="TxtNoChannels"
                                            Text="Kanal bulunamadı. Kanallar sekmesinden ekleyin."
-                                           FontSize="12" Foreground="#E74C3C"
+                                           FontSize="12" Foreground="#DC2626"
                                            VerticalAlignment="Center" Visibility="Collapsed"/>
                             </StackPanel>
                         </Border>
@@ -189,7 +189,7 @@
                         <Border Background="White" CornerRadius="12" Padding="20,16" Margin="0,0,0,12">
                             <StackPanel>
                                 <TextBlock Text="Yeni Kategori Ekle" FontSize="15" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,14"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,14"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox x:Name="TxtNewCategoryName" Width="220" Height="42"
                                              FontSize="14" Margin="0,0,10,0" KeyDown="TxtEnter_AddCategory"/>
@@ -221,16 +221,16 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
-                                                        <TextBlock Text="{Binding Channel}" FontSize="12" Foreground="#95A5A6" Margin="0,2,0,0"/>
+                                                        <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#1F2A37"/>
+                                                        <TextBlock Text="{Binding Channel}" FontSize="12" Foreground="#94A3B8" Margin="0,2,0,0"/>
                                                     </StackPanel>
                                                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                                        <Button Width="34" Height="34" Margin="0,0,5,0" Background="#95A5A6" BorderThickness="0"
+                                                        <Button Width="34" Height="34" Margin="0,0,5,0" Background="#94A3B8" BorderThickness="0"
                                                                 Tag="{Binding}" Click="BtnMoveCategoryUp_Click" Style="{StaticResource IconBtn}">
                                                             <TextBlock Text="▲" Foreground="White" FontSize="11" FontWeight="Bold"
                                                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                         </Button>
-                                                        <Button Width="34" Height="34" Margin="0,0,8,0" Background="#95A5A6" BorderThickness="0"
+                                                        <Button Width="34" Height="34" Margin="0,0,8,0" Background="#94A3B8" BorderThickness="0"
                                                                 Tag="{Binding}" Click="BtnMoveCategoryDown_Click" Style="{StaticResource IconBtn}">
                                                             <TextBlock Text="▼" Foreground="White" FontSize="11" FontWeight="Bold"
                                                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -264,10 +264,10 @@
                                                                     <ColumnDefinition Width="Auto"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="14"
-                                                                           FontWeight="SemiBold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                                           FontWeight="SemiBold" Foreground="#1F2A37" VerticalAlignment="Center"/>
                                                                 <TextBlock Grid.Column="1"
                                                                            Text="{Binding PriceTam, StringFormat='{}{0:N2} TL'}"
-                                                                           FontSize="14" FontWeight="Bold" Foreground="#27AE60"
+                                                                           FontSize="14" FontWeight="Bold" Foreground="#16A34A"
                                                                            VerticalAlignment="Center" Margin="0,0,16,0"/>
                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                                     <Button Height="32" Padding="12,0" Margin="0,0,6,0"
@@ -300,7 +300,7 @@
                                 Margin="0,0,0,16" Visibility="Collapsed">
                             <StackPanel>
                                 <TextBlock Text="Kullanıcı Düzenle" FontSize="15" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,12"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,12"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox Width="200" Height="42" FontSize="14" Margin="0,0,12,0"
                                              Text="{Binding EditUsername, UpdateSourceTrigger=PropertyChanged}"/>
@@ -327,8 +327,8 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Username}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
-                                                    <TextBlock Text="{Binding Role}" FontSize="12" Foreground="#95A5A6" Margin="0,2,0,0"/>
+                                                    <TextBlock Text="{Binding Username}" FontSize="16" FontWeight="Bold" Foreground="#1F2A37"/>
+                                                    <TextBlock Text="{Binding Role}" FontSize="12" Foreground="#94A3B8" Margin="0,2,0,0"/>
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                                                     <Button Height="36" Padding="14,0" Margin="0,0,8,0"
@@ -351,7 +351,7 @@
                         <Border Background="White" CornerRadius="12" Padding="20,16">
                             <StackPanel>
                                 <TextBlock Text="Yeni Kullanıcı Ekle" FontSize="15" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,14"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,14"/>
                                 <Grid Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="200"/>
@@ -397,7 +397,7 @@
                                 Padding="20,16" Margin="0,0,0,12" Visibility="Collapsed">
                             <StackPanel>
                                 <TextBlock Text="Kanal Düzenle" FontSize="15" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,12"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,12"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox x:Name="TxtEditChannelName" Width="240" Height="42" FontSize="14"
                                              Margin="0,0,10,0"
@@ -419,7 +419,7 @@
                         <Border Background="White" CornerRadius="12" Padding="20,16" Margin="0,0,0,12">
                             <StackPanel>
                                 <TextBlock Text="Yeni Kanal Ekle" FontSize="15" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,14"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,14"/>
                                 <TextBlock Text="Kanallar; kategorilerin hangi sipariş modunda göründüğünü belirler. (Masa, Kurye, Trendyol vb.)"
                                            FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,0,0,12" TextWrapping="Wrap"/>
                                 <StackPanel Orientation="Horizontal">
@@ -446,14 +446,14 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="16"
-                                                           FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                           FontWeight="Bold" Foreground="#1F2A37" VerticalAlignment="Center"/>
                                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                                    <Button Width="34" Height="34" Margin="0,0,5,0" Background="#95A5A6" BorderThickness="0"
+                                                    <Button Width="34" Height="34" Margin="0,0,5,0" Background="#94A3B8" BorderThickness="0"
                                                             Tag="{Binding}" Click="BtnMoveChannelUp_Click" Style="{StaticResource IconBtn}">
                                                         <TextBlock Text="▲" Foreground="White" FontSize="11" FontWeight="Bold"
                                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                     </Button>
-                                                    <Button Width="34" Height="34" Margin="0,0,8,0" Background="#95A5A6" BorderThickness="0"
+                                                    <Button Width="34" Height="34" Margin="0,0,8,0" Background="#94A3B8" BorderThickness="0"
                                                             Tag="{Binding}" Click="BtnMoveChannelDown_Click" Style="{StaticResource IconBtn}">
                                                         <TextBlock Text="▼" Foreground="White" FontSize="11" FontWeight="Bold"
                                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -484,7 +484,7 @@
                                 Margin="0,0,0,12" Visibility="Collapsed">
                             <StackPanel>
                                 <TextBlock Text="Müşteri Adını Düzenle" FontSize="15" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,12"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,12"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox Width="260" Height="42" FontSize="14" Margin="0,0,12,0"
                                              Text="{Binding EditVeresiyeName, UpdateSourceTrigger=PropertyChanged}"/>
@@ -517,11 +517,11 @@
                                                                Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding CustomerName}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                                    <TextBlock Text="{Binding CustomerName}" FontSize="16" FontWeight="Bold" Foreground="#1F2A37"/>
                                                     <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
-                                                        <TextBlock Text="{Binding TableName}" FontSize="12" Foreground="#95A5A6" Margin="0,0,10,0"/>
+                                                        <TextBlock Text="{Binding TableName}" FontSize="12" Foreground="#94A3B8" Margin="0,0,10,0"/>
                                                         <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"
-                                                                   FontSize="12" Foreground="#95A5A6"/>
+                                                                   FontSize="12" Foreground="#94A3B8"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                                 <TextBlock Grid.Column="2" VerticalAlignment="Center"
@@ -553,17 +553,17 @@
                                 HorizontalAlignment="Left" Margin="0,0,0,16">
                             <StackPanel>
                                 <TextBlock Text="Uygulama ve İşletme Bilgileri" FontSize="16" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,20"/>
-                                <TextBlock Text="Uygulama Adı" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,20"/>
+                                <TextBlock Text="Uygulama Adı" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtAppName" Height="44" FontSize="15" Margin="0,0,0,16"/>
-                                <TextBlock Text="İşletme Adı (fişte çıkacak)" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="İşletme Adı (fişte çıkacak)" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtBusinessName" Height="44" FontSize="15" Margin="0,0,0,16"/>
-                                <TextBlock Text="Adres" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="Adres" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtBusinessAddress" Height="44" FontSize="15" Margin="0,0,0,16"/>
-                                <TextBlock Text="Telefon" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="Telefon" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtBusinessPhone" Height="44" FontSize="15" Margin="0,0,0,16"/>
                                 <TextBlock Text="Fiş Alt Notu (teşekkürler, bekleyiniz vb.)" FontSize="14"
-                                           FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                           FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtReceiptNote" Height="44" FontSize="15" Margin="0,0,0,24"/>
                                 <Button Style="{StaticResource PrimaryButton}" Height="48" FontSize="15"
                                         Padding="28,0" HorizontalAlignment="Left" Click="BtnSaveBusinessSettings_Click">
@@ -575,12 +575,12 @@
                                 HorizontalAlignment="Left" Margin="0,0,0,16">
                             <StackPanel>
                                 <TextBlock Text="Lisans Bilgisi" FontSize="16" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,16"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,16"/>
                                 <Border x:Name="PanelLicenseInfo" CornerRadius="8" Padding="16">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock x:Name="TxtLicenseIcon" FontSize="20" VerticalAlignment="Center" Margin="0,0,12,0"/>
                                         <StackPanel>
-                                            <TextBlock x:Name="TxtLicenseStatus" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                                            <TextBlock x:Name="TxtLicenseStatus" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37"/>
                                             <TextBlock x:Name="TxtLicenseExpiry" FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,0"/>
                                             <TextBlock x:Name="TxtLicensePackage" FontSize="13" Foreground="#7F8C8D" Margin="0,2,0,0"/>
                                         </StackPanel>
@@ -590,7 +590,7 @@
                         </Border>
                         <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="580" HorizontalAlignment="Left">
                             <StackPanel>
-                                <TextBlock Text="Uygulama İkonu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,8"/>
+                                <TextBlock Text="Uygulama İkonu" FontSize="16" FontWeight="Bold" Foreground="#1F2A37" Margin="0,0,0,8"/>
                                 <TextBlock Text="Pencere ikonu değiştirilir. (Görev çubuğu ikonu sabittir)"
                                            FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,0,0,16"/>
                                 <StackPanel Orientation="Horizontal">
@@ -603,7 +603,7 @@
                                                 HorizontalAlignment="Left" Click="BtnSelectIcon_Click">
                                             <TextBlock Text="İkon Seç..." Foreground="White"/>
                                         </Button>
-                                        <TextBlock x:Name="TxtIconPath" FontSize="11" Foreground="#95A5A6"
+                                        <TextBlock x:Name="TxtIconPath" FontSize="11" Foreground="#94A3B8"
                                                    Margin="0,6,0,0" TextTrimming="CharacterEllipsis" MaxWidth="200"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -615,14 +615,14 @@
                     <StackPanel x:Name="PanelAg" Visibility="Collapsed">
                         <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="520" HorizontalAlignment="Left">
                             <StackPanel>
-                                <TextBlock Text="Ağ Modu" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                                <TextBlock Text="Ağ Modu" FontSize="16" FontWeight="Bold" Foreground="#1F2A37" Margin="0,0,0,20"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
                                     <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
                                         <StackPanel Orientation="Horizontal">
                                             <RadioButton x:Name="RbStandalone" GroupName="AppMode" IsChecked="True"
                                                          Checked="AppMode_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                             <TextBlock Text="Tek Bilgisayar" FontSize="14" FontWeight="SemiBold"
-                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                       Foreground="#1F2A37" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                     <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
@@ -630,7 +630,7 @@
                                             <RadioButton x:Name="RbServer" GroupName="AppMode"
                                                          Checked="AppMode_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                             <TextBlock Text="Sunucu" FontSize="14" FontWeight="SemiBold"
-                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                       Foreground="#1F2A37" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                     <Border CornerRadius="10" Padding="16,12" Background="#F8F9FA">
@@ -638,7 +638,7 @@
                                             <RadioButton x:Name="RbClient" GroupName="AppMode"
                                                          Checked="AppMode_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                             <TextBlock Text="İstemci" FontSize="14" FontWeight="SemiBold"
-                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                       Foreground="#1F2A37" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
@@ -647,29 +647,29 @@
                                         Background="#E8F5E9" CornerRadius="10" Padding="16,12" Margin="0,0,0,20">
                                     <StackPanel>
                                         <TextBlock Text="İstemci bilgisayara bunu yazın:"
-                                                   FontSize="13" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
-                                        <TextBlock x:Name="TxtServerName" FontSize="18" FontWeight="Bold" Foreground="#27AE60"/>
+                                                   FontSize="13" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
+                                        <TextBlock x:Name="TxtServerName" FontSize="18" FontWeight="Bold" Foreground="#16A34A"/>
                                         <TextBlock x:Name="TxtServerIps" FontSize="13" Foreground="{StaticResource SubtleTextBrush}"
                                                    Margin="0,4,0,0" TextWrapping="Wrap"/>
                                         <TextBlock Text="Bilgisayar adı IP değişse bile sabit kalır — adı yazmanız önerilir."
                                                    FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,6,0,0" TextWrapping="Wrap"/>
                                     </StackPanel>
                                 </Border>
-                                <TextBlock Text="Sunucu Port" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="Sunucu Port" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtServerPort" Height="44" FontSize="15" Width="160"
                                          HorizontalAlignment="Left" Text="5150" Margin="0,0,0,16"/>
                                 <StackPanel x:Name="PanelClientSettings" Visibility="Collapsed">
-                                    <TextBlock Text="Sunucu Adı veya IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBlock Text="Sunucu Adı veya IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                     <TextBox x:Name="TxtServerIp" Height="44" FontSize="15" Width="240"
                                              HorizontalAlignment="Left" Margin="0,0,0,4"/>
                                     <TextBlock Text="İpucu: Sunucunun bilgisayar adını yazarsanız IP değişse bile bağlantı kopmaz."
                                                FontSize="13" Foreground="{StaticResource SubtleTextBrush}" Margin="0,0,0,16"
                                                TextWrapping="Wrap" MaxWidth="240" HorizontalAlignment="Left"/>
                                 </StackPanel>
-                                <TextBlock Text="API Kullanıcı Adı" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="API Kullanıcı Adı" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <TextBox x:Name="TxtApiUsername" Height="44" FontSize="15" Width="240"
                                          HorizontalAlignment="Left" Margin="0,0,0,16"/>
-                                <TextBlock Text="API Şifresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                <TextBlock Text="API Şifresi" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                 <PasswordBox x:Name="TxtApiPassword" Height="44" FontSize="15" Width="240"
                                              HorizontalAlignment="Left" Margin="0,0,0,16"/>
                                 <StackPanel x:Name="PanelTestConnection" Orientation="Horizontal"
@@ -693,14 +693,14 @@
                         <Border Background="White" CornerRadius="12" Padding="28" MaxWidth="520" HorizontalAlignment="Left">
                             <StackPanel>
                                 <TextBlock Text="Yazıcı Bağlantısı" FontSize="16" FontWeight="Bold"
-                                           Foreground="#2C3E50" Margin="0,0,0,20"/>
+                                           Foreground="#1F2A37" Margin="0,0,0,20"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                     <Border CornerRadius="10" Padding="16,12" Margin="0,0,12,0" Background="#F8F9FA">
                                         <StackPanel Orientation="Horizontal">
                                             <RadioButton x:Name="RbUsb" GroupName="PrinterType" IsChecked="True"
                                                          Checked="PrinterType_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                             <TextBlock Text="USB" FontSize="14" FontWeight="SemiBold"
-                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                       Foreground="#1F2A37" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                     <Border CornerRadius="10" Padding="16,12" Background="#F8F9FA">
@@ -708,20 +708,20 @@
                                             <RadioButton x:Name="RbLan" GroupName="PrinterType"
                                                          Checked="PrinterType_Changed" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                             <TextBlock Text="Ağ (LAN)" FontSize="14" FontWeight="SemiBold"
-                                                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                                       Foreground="#1F2A37" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
                                 <StackPanel x:Name="PanelUsb" Margin="0,0,0,16">
-                                    <TextBlock Text="Yazıcı Adı" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBlock Text="Yazıcı Adı" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                     <TextBox x:Name="TxtUsbPrinterName" Height="44" FontSize="15"
                                              HorizontalAlignment="Left" Width="320"/>
                                 </StackPanel>
                                 <StackPanel x:Name="PanelLan" Visibility="Collapsed" Margin="0,0,0,16">
-                                    <TextBlock Text="IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBlock Text="IP Adresi" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                     <TextBox x:Name="TxtLanIp" Height="44" FontSize="15"
                                              HorizontalAlignment="Left" Width="240" Margin="0,0,0,12"/>
-                                    <TextBlock Text="Port" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                                    <TextBlock Text="Port" FontSize="14" FontWeight="SemiBold" Foreground="#1F2A37" Margin="0,0,0,6"/>
                                     <TextBox x:Name="TxtLanPort" Height="44" FontSize="15"
                                              HorizontalAlignment="Left" Width="120" Text="9100"/>
                                 </StackPanel>
@@ -750,7 +750,7 @@
                 CornerRadius="10" Padding="18,12" MinWidth="200"
                 Panel.ZIndex="100">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="12" ShadowDepth="4" Color="#000000" Opacity="0.2"/>
+                <DropShadowEffect BlurRadius="18" ShadowDepth="4" Color="#1B2A4A" Opacity="0.18"/>
             </Border.Effect>
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="ToastIcon" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>

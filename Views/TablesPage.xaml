@@ -15,7 +15,7 @@
 
         <!-- Çevrimdışı uyarı şeridi -->
         <Border x:Name="PanelOfflineWarning" Grid.Row="0"
-                Background="#E74C3C" CornerRadius="10"
+                Background="#DC2626" CornerRadius="10"
                 Padding="16,10" Margin="0,0,0,8"
                 Visibility="Collapsed">
             <StackPanel Orientation="Horizontal">
@@ -66,8 +66,8 @@
                                     <Border Background="White" CornerRadius="12"
                                             x:Name="CardBorder">
                                         <Border.Effect>
-                                            <DropShadowEffect BlurRadius="10" ShadowDepth="2"
-                                                              Color="#BBBBBB" Opacity="0.18"/>
+                                            <DropShadowEffect BlurRadius="16" ShadowDepth="3"
+                                                              Color="#1B2A4A" Opacity="0.12"/>
                                         </Border.Effect>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -108,10 +108,10 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.88"/>
+                                            <Setter TargetName="CardBorder" Property="Background" Value="#F6F8FA"/>
                                         </Trigger>
                                         <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.72"/>
+                                            <Setter TargetName="CardBorder" Property="Background" Value="#EDF0F3"/>
                                         </Trigger>
                                         <DataTrigger Binding="{Binding Status}"
                                                      Value="{x:Static models:TableStatus.Active}">
@@ -142,8 +142,8 @@
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="White" CornerRadius="12" x:Name="CardBorder">
                                         <Border.Effect>
-                                            <DropShadowEffect BlurRadius="10" ShadowDepth="2"
-                                                              Color="#BBBBBB" Opacity="0.18"/>
+                                            <DropShadowEffect BlurRadius="16" ShadowDepth="3"
+                                                              Color="#1B2A4A" Opacity="0.12"/>
                                         </Border.Effect>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -184,10 +184,10 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.88"/>
+                                            <Setter TargetName="CardBorder" Property="Background" Value="#F6F8FA"/>
                                         </Trigger>
                                         <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="CardBorder" Property="Opacity" Value="0.72"/>
+                                            <Setter TargetName="CardBorder" Property="Background" Value="#EDF0F3"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>

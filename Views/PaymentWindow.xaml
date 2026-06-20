@@ -77,10 +77,10 @@
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                         <Border Background="#1E2A3A" CornerRadius="8" Padding="8,4"
                                                 VerticalAlignment="Center" Margin="0,0,8,0">
-                                            <TextBlock FontSize="13" FontWeight="Bold" Foreground="#27AE60"
+                                            <TextBlock FontSize="13" FontWeight="Bold" Foreground="#16A34A"
                                                        Text="{Binding RowTotal, StringFormat='{}{0:N2} TL', Mode=OneWay}"/>
                                         </Border>
-                                        <Button Width="38" Height="38" Background="#E74C3C"
+                                        <Button Width="38" Height="38" Background="#DC2626"
                                                 Style="{StaticResource PosBtn}"
                                                 Tag="{Binding}" Click="BtnDecrease_Click">
                                             <TextBlock Text="−" Foreground="White" FontSize="22" FontWeight="Bold"
@@ -92,7 +92,7 @@
                                                        FontSize="16" FontWeight="Bold" Foreground="White"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
-                                        <Button Width="38" Height="38" Background="#27AE60"
+                                        <Button Width="38" Height="38" Background="#16A34A"
                                                 Style="{StaticResource PosBtn}"
                                                 Tag="{Binding}" Click="BtnIncrease_Click">
                                             <TextBlock Text="+" Foreground="White" FontSize="22" FontWeight="Bold"
@@ -196,7 +196,7 @@
             </Grid.RowDefinitions>
 
             <Button Grid.Row="0" Margin="12,16,12,8" Height="74"
-                    Background="#27AE60" Style="{StaticResource PosBtn}"
+                    Background="#16A34A" Style="{StaticResource PosBtn}"
                     Click="BtnPayCash_Click">
                 <TextBlock Text="Nakit" Foreground="White" FontWeight="Bold" FontSize="20"/>
             </Button>
@@ -255,7 +255,7 @@
                                                        FontSize="13" FontWeight="SemiBold"
                                                        VerticalAlignment="Center"
                                                        Text="{Binding PaymentTypeDisplay}"/>
-                                            <TextBlock Grid.Column="1" Foreground="#27AE60"
+                                            <TextBlock Grid.Column="1" Foreground="#16A34A"
                                                        FontSize="14" FontWeight="Bold"
                                                        VerticalAlignment="Center"
                                                        Text="{Binding Amount, StringFormat='{}{0:N2} TL'}"/>
@@ -280,7 +280,7 @@
                                                    Foreground="#8E44AD" FontSize="11"
                                                    VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <TextBlock Text="{Binding Amount, StringFormat='{}{0:N2} TL'}"
-                                                   Foreground="#27AE60" FontSize="13" FontWeight="Bold"
+                                                   Foreground="#16A34A" FontSize="13" FontWeight="Bold"
                                                    VerticalAlignment="Center" Margin="0,0,8,0"/>
                                         <Button Width="26" Height="26"
                                                 Background="#C0392B" Style="{StaticResource PosBtn}"
@@ -309,7 +309,7 @@
             <!-- Tamamla -->
             <Button x:Name="BtnComplete" Grid.Row="7"
                     Margin="12,0,12,12" Height="54"
-                    Background="#27AE60" Style="{StaticResource PosBtn}"
+                    Background="#16A34A" Style="{StaticResource PosBtn}"
                     Visibility="Collapsed" Click="BtnComplete_Click">
                 <TextBlock Text="✓  TAMAMLA" Foreground="White" FontWeight="Bold" FontSize="17"/>
             </Button>

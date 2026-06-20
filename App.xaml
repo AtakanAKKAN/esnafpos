@@ -9,20 +9,33 @@
             <!-- CONVERTERS -->
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
-            <!-- RENKLER -->
-            <SolidColorBrush x:Key="PrimaryBrush" Color="#2C3E50"/>
-            <SolidColorBrush x:Key="AccentBrush" Color="#27AE60"/>
-            <SolidColorBrush x:Key="DangerBrush" Color="#E74C3C"/>
-            <SolidColorBrush x:Key="WarningBrush" Color="#F39C12"/>
-            <SolidColorBrush x:Key="LightBrush" Color="#ECF0F1"/>
-            <SolidColorBrush x:Key="TextBrush" Color="#2C3E50"/>
-            <SolidColorBrush x:Key="MutedBrush" Color="#95A5A6"/>
+            <!-- TİPOGRAFİ — modern yerleşik font (Win11 sistem fontu; bağımlılık yok) -->
+            <FontFamily x:Key="AppFontFamily">Segoe UI Variable Text, Segoe UI</FontFamily>
+
+            <!-- RENKLER — "calm" palet: doygunluk düşürüldü, zemin nötrlendi, yeşil korundu -->
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#1F2A37"/>
+            <SolidColorBrush x:Key="AccentBrush" Color="#16A34A"/>
+            <SolidColorBrush x:Key="DangerBrush" Color="#DC2626"/>
+            <SolidColorBrush x:Key="WarningBrush" Color="#E8910C"/>
+            <SolidColorBrush x:Key="LightBrush" Color="#F5F6F8"/>
+            <SolidColorBrush x:Key="TextBrush" Color="#1F2937"/>
+            <SolidColorBrush x:Key="MutedBrush" Color="#94A3B8"/>
             <!-- Bilgi taşıyan ikincil metin için okunaklı gri (MutedBrush'tan koyu).
                  MutedBrush yalnız dekoratif/koyu-zemin için kalsın. -->
-            <SolidColorBrush x:Key="SubtleTextBrush" Color="#5D6D7E"/>
+            <SolidColorBrush x:Key="SubtleTextBrush" Color="#64748B"/>
+
+            <!-- Yüzey / kenarlık / yumuşak yeşil hover tonu -->
+            <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="BorderSubtleBrush" Color="#E6E8EC"/>
+            <SolidColorBrush x:Key="AccentSoftBrush" Color="#E7F4EC"/>
+
+            <!-- YUMUŞAK GÖLGE — sert gri DropShadow yerine paylaşılan modern gölge -->
+            <DropShadowEffect x:Key="SoftShadow" BlurRadius="16" ShadowDepth="3"
+                              Direction="270" Color="#1B2A4A" Opacity="0.12"/>
 
             <!-- GENEL BUTON -->
             <Style x:Key="BaseButton" TargetType="Button">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
                 <Setter Property="Padding" Value="16,10"/>
@@ -31,18 +44,20 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="8"
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center"
+                            <!-- Opaklık yerine şeffaf overlay ile ton: metin solmaz -->
+                            <Grid>
+                                <Border Background="{TemplateBinding Background}" CornerRadius="10"/>
+                                <Border x:Name="Overlay" Background="Transparent" CornerRadius="10"/>
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="Center"
                                                   VerticalAlignment="Center"/>
-                            </Border>
+                            </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="0.85"/>
+                                    <Setter TargetName="Overlay" Property="Background" Value="#14000000"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Opacity" Value="0.7"/>
+                                    <Setter TargetName="Overlay" Property="Background" Value="#29000000"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -83,6 +98,7 @@
 
             <!-- NUMPAD BUTON -->
             <Style x:Key="NumpadButton" TargetType="Button">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="24"/>
                 <Setter Property="FontWeight" Value="Bold"/>
                 <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -93,18 +109,19 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="12"
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center"
+                            <Grid>
+                                <Border Background="{TemplateBinding Background}" CornerRadius="14"/>
+                                <Border x:Name="Overlay" Background="Transparent" CornerRadius="14"/>
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="Center"
                                                   VerticalAlignment="Center"/>
-                            </Border>
+                            </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="0.85"/>
+                                    <Setter TargetName="Overlay" Property="Background" Value="#1FFFFFFF"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Opacity" Value="0.65"/>
+                                    <Setter TargetName="Overlay" Property="Background" Value="#33000000"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -124,26 +141,30 @@
 
             <!-- TEXTBOX -->
             <Style TargetType="TextBox">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="Padding" Value="10,8"/>
-                <Setter Property="BorderBrush" Value="#BDC3C7"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
                 <Setter Property="BorderThickness" Value="1.5"/>
             </Style>
 
             <!-- TEXTBLOCK (varsayılan gövde metni) -->
             <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
             </Style>
 
             <!-- TİPOGRAFİ ÖLÇEĞİ — tutarlı başlık/etiket/yardım metni -->
             <Style x:Key="PageTitle" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="24"/>
                 <Setter Property="FontWeight" Value="Bold"/>
                 <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
             </Style>
 
             <Style x:Key="SectionTitle" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="18"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
                 <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
@@ -151,6 +172,7 @@
 
             <!-- Form etiketi (ör. "Kullanıcı Adı") -->
             <Style x:Key="LabelText" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
                 <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
@@ -158,6 +180,7 @@
 
             <!-- İkincil/yardım metni — okunaklı (yaşlı gözler için ≥13px, koyu gri) -->
             <Style x:Key="Caption" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
                 <Setter Property="FontSize" Value="13"/>
                 <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
@@ -203,7 +226,7 @@
                     <ControlTemplate TargetType="Button">
                         <Border Margin="8,2">
                             <Border x:Name="LeftBar" CornerRadius="8" Background="#253D52"
-                                    BorderBrush="#27AE60" BorderThickness="3,0,0,0">
+                                    BorderBrush="{StaticResource AccentBrush}" BorderThickness="3,0,0,0">
                                 <ContentPresenter Margin="16,12"/>
                             </Border>
                         </Border>
@@ -213,32 +236,37 @@
         </Style>
 
         <Style x:Key="NavBtnText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="#A0B4C8"/>
         </Style>
 
         <Style x:Key="NavBtnTextActive" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
 
         <Style x:Key="IconBtn" TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="8">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" CornerRadius="10"/>
+                            <Border x:Name="Overlay" Background="Transparent" CornerRadius="10"/>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Opacity" Value="0.82"/>
+                                <Setter TargetName="Overlay" Property="Background" Value="#16000000"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bg" Property="Opacity" Value="0.65"/>
+                                <Setter TargetName="Overlay" Property="Background" Value="#29000000"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

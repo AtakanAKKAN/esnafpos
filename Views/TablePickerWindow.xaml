@@ -17,17 +17,17 @@
                     <ControlTemplate TargetType="Button">
                         <Border Background="White" CornerRadius="12" x:Name="CardBorder">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#BBBBBB" Opacity="0.18"/>
+                                <DropShadowEffect BlurRadius="16" ShadowDepth="3" Color="#1B2A4A" Opacity="0.12"/>
                             </Border.Effect>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="8"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" CornerRadius="12,0,0,12" Background="#27AE60"/>
+                                <Border Grid.Column="0" CornerRadius="12,0,0,12" Background="#16A34A"/>
                                 <StackPanel Grid.Column="1" Margin="12,0,10,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
-                                    <TextBlock Text="Boş Masa" FontSize="12" Foreground="#27AE60" Margin="0,4,0,0"/>
+                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#1F2A37"/>
+                                    <TextBlock Text="Boş Masa" FontSize="12" Foreground="#16A34A" Margin="0,4,0,0"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -53,7 +53,7 @@
                     <ControlTemplate TargetType="Button">
                         <Border Background="White" CornerRadius="12" x:Name="CardBorder">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#BBBBBB" Opacity="0.18"/>
+                                <DropShadowEffect BlurRadius="16" ShadowDepth="3" Color="#1B2A4A" Opacity="0.12"/>
                             </Border.Effect>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -63,7 +63,7 @@
                                 <Border Grid.Column="0" CornerRadius="12,0,0,12" Background="#8E44AD"/>
                                 <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding CustomerName}" FontSize="15" FontWeight="Bold"
-                                               Foreground="#2C3E50" TextTrimming="CharacterEllipsis"/>
+                                               Foreground="#1F2A37" TextTrimming="CharacterEllipsis"/>
                                     <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N2} TL'}"
                                                FontSize="12" FontWeight="SemiBold"
                                                Foreground="#8E44AD" Margin="0,4,0,0"/>
@@ -95,7 +95,7 @@
 
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
             <TextBlock x:Name="TxtTitle" FontSize="20" FontWeight="Bold"
-                       Foreground="#2C3E50" Margin="0,0,0,6"/>
+                       Foreground="#1F2A37" Margin="0,0,0,6"/>
             <TextBlock x:Name="TxtSubtitle" FontSize="14"
                        Foreground="{StaticResource SubtleTextBrush}" TextWrapping="Wrap"/>
         </StackPanel>
